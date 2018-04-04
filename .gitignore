@@ -51,3 +51,4 @@ build-iPhoneSimulator/
 
 # support byebug
 .byebug_history
+.ruby-version
