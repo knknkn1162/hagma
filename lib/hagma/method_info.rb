@@ -15,12 +15,13 @@ module Hagma
         end
         @caller_locations = caller_locations(5)
         @owner = method.owner
-        @receiver = method.receiver
+        @receiver = method.receiver unless method.class == UnboundMethod
         @params = method.parameters
         @original_name = method.original_name
       end
     end
 
+    # @note Module#instance_method returns UnboundMethod class
     def find_method
       klass.__send__("#{method_type}_method", name)
     end
