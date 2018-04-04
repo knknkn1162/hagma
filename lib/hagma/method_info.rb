@@ -16,10 +16,8 @@ module Hagma
 
     def analyze
       find_method.tap do |method|
-        if (loc = method.source_location)
-          @location = SourceAnalyzer.new(*loc)
-        end
-        @caller_locations = caller_locations(5)
+        loc = method.source_location
+        @location = Location.new(absolute_path: File.expand_path(loc[0]), lineno: loc[1]) if loc
         @owner = method.owner
         @receiver = method.receiver unless method.class == UnboundMethod
         @params = method.parameters
