@@ -1,11 +1,17 @@
+require 'hagma/location'
+require 'hagma/backtrace/location'
+
 module Hagma
   # store information on the designated method and you can analyze it.
   class MethodInfo
     attr_reader :klass, :name, :hook
-    def initialize(mth, klass, hook)
+    BACKTRACE_METHOD_NUMBER = 5
+    def initialize(mth, klass, hook, backtrace = true)
       @name = mth
       @klass = klass
       @hook = hook
+      # trace before Hagma::Hook::method_event
+      @backtrace_locations = Backtrace::Location.locations(BACKTRACE_METHOD_NUMBER) if backtrace
     end
 
     def analyze
