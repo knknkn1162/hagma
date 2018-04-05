@@ -6,12 +6,12 @@ module Hagma
   class MethodInfo
     attr_reader :klass, :name, :hook
     BACKTRACE_METHOD_NUMBER = 5
-    def initialize(mth, klass, hook, backtrace = true)
+    def initialize(mth, klass, hook)
       @name = mth
       @klass = klass
       @hook = hook
       # trace before Hagma::Hook::method_event
-      @backtrace_locations = Backtrace::Location.locations(BACKTRACE_METHOD_NUMBER) if backtrace
+      @backtrace_locations = Backtrace::Location.locations(BACKTRACE_METHOD_NUMBER)
     end
 
     def analyze
