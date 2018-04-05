@@ -19,4 +19,18 @@ RSpec.describe TestCase::BaseClass do
       expect(method_suites).to include [TestCase::BaseClass, :base_singleton_method, :singleton_method_added]
     end
   end
+
+  context 'when Hagma::MethodInfo#analyze method' do
+    let(:method_info) do
+      events.find do |m|
+        [m.klass, m.name, m.hook] == [TestCase::BaseClass, :base_singleton_method, :singleton_method_added]
+      end
+    end
+    it 'coincides source_location & head of caller_locations' do
+      method_info.analyze
+      source_location = method_info.instance_variable_get(:@location)
+      caller_location = method_info.instance_variable_get(:@backtrace_locations)[0]
+      expect([source_location.absolute_path, source_location.lineno]).to eq [caller_location.absolute_path, caller_location.lineno]
+    end
+  end
 end
