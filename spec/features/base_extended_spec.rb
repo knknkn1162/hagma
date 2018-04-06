@@ -7,7 +7,7 @@ RSpec.describe TestCase::BaseExtended do
     events.map { |m| [m.mod, m.owner, m.hook] }
   end
   context 'when Module#extended @ BaseExtend module' do
-    it 'belongs to Events.methods' do
+    it 'belongs to Events.modules' do
       expect(method_suites).to include [TestCase::BaseModule, TestCase::BaseExtended, :extended]
     end
   end
