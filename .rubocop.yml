@@ -6,3 +6,6 @@ Style/GuardClause:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
