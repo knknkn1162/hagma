@@ -5,7 +5,7 @@ RSpec.describe TestCase::BaseModule do
   # evaluate only once
   let!(:events) { Hagma::Events.methods }
   let(:method_suites) do
-    events.map { |m| [m.klass, m.name, m.hook] }
+    events.map { |m| [m.owner, m.name, m.hook] }
   end
 
   context 'when Object#method_added @ BaseModule#base_instance_method' do
@@ -23,7 +23,7 @@ RSpec.describe TestCase::BaseModule do
   context 'when Hagma::MethodInfo#analyze method' do
     let(:method_info) do
       events.find do |m|
-        [m.klass, m.name, m.hook] == [TestCase::BaseModule, :base_singleton_method, :singleton_method_added]
+        [m.owner, m.name, m.hook] == [TestCase::BaseModule, :base_singleton_method, :singleton_method_added]
       end
     end
     it 'coincides source_location & head of caller_locations' do

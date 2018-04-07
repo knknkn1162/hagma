@@ -13,8 +13,8 @@ module Hagma
         @modules ||= []
       end
 
-      def add_method_event(method, klass, hook)
-        methods << MethodInfo.new(method, klass, hook)
+      def add_method_event(method, owner, hook)
+        methods << MethodInfo.new(method, owner, hook)
       end
 
       def add_module_event(mod, owner, hook)

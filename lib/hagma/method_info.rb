@@ -4,11 +4,11 @@ require 'hagma/backtrace/location'
 module Hagma
   # store information on the designated method and you can analyze it.
   class MethodInfo
-    attr_reader :klass, :name, :hook
+    attr_reader :owner, :name, :hook
     BACKTRACE_METHOD_NUMBER = 5
-    def initialize(mth, klass, hook)
+    def initialize(mth, owner, hook)
       @name = mth
-      @klass = klass
+      @owner = owner
       @hook = hook
       # trace before Hagma::Hook::method_event
       @backtrace_locations = Backtrace::Location.locations(BACKTRACE_METHOD_NUMBER)
@@ -27,7 +27,7 @@ module Hagma
 
     # @note Module#instance_method returns UnboundMethod class
     def find_method
-      klass.__send__("#{method_type}_method", name)
+      owner.__send__("#{method_type}_method", name)
     end
 
     def method_type
