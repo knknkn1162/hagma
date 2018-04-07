@@ -33,5 +33,9 @@ module Hagma
     def method_type
       @method_type ||= hook.to_s.include?('singleton') ? :singleton : :instance
     end
+
+    def singleton?
+      method_type == :singleton
+    end
   end
 end
