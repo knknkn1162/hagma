@@ -13,6 +13,7 @@ module Hagma
         path_lines[path] ||= File.read(path).split("\n")
       end
 
+      # Format the extracted lines by default. You can customize the fomatter in initialization.
       def format(lines, cur_no)
         lastno = lines.keys.max
         lines.map do |num, line|
