@@ -16,21 +16,9 @@ jobs:
           name: Which bundler?
           command: bundle -v
 
-      # Restore bundle cache
-      - restore_cache:
-          keys:
-            - rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
-            - rails-demo-bundle-v2-
-
       - run:
           name: Bundle Install
           command: bundle check || bundle install
-
-      # Store bundle cache
-      - save_cache:
-          key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
 
       - run:
           name: Yarn Install
