@@ -18,12 +18,16 @@ RSpec.describe Hagma::Extractor do
         end
       end
 
-      context 'when current line number is 6' do
-        let(:lineno) { 7 }
-        it 'ranges from line.3 to line.9' do
-          res = (4..10).map { |i| [i - 1, i.to_s] }.to_h
-          expect(extractor.__send__(:extract_lines, script, 4)).to eq res
+  context 'when #to_s' do
+    context 'when file is not found' do
+      let(:extractor) do
+        Hagma::Extractor.new(absolute_path, lineno) do
+          raise IOError
         end
+      end
+
+      it 'returns the string type of exception' do
+        expect(extractor.to_s).to start_with 'IOError'
       end
     end
   end

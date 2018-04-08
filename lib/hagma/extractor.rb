@@ -32,8 +32,13 @@ module Hagma
       @formatter = block
     end
 
+    # @return [String] The part of codes with lineno and current line arrow. If an exception occurs, backtrace is returned with String.
     def to_s
-      @formatter ? @formatter.call(lines, lineno) : self.class.format(lines, lineno)
+      begin
+        @formatter ? @formatter.call(lines, lineno) : self.class.format(lines, lineno)
+      rescue => e
+        [e.exception, e.backtrace].flatten.join("\n")
+      end
     end
 
     # @return [Hash] hash from lineno to String
