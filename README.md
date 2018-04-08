@@ -16,7 +16,7 @@ Hagma is very useful to cope with the difficulty.
 
 ## Installation
 
-NOTE: Currently, the library is registered as gem:bow:
+NOTE: Currently, the library is NOT registered as gem:bow:
 
 ```bash
 gem install hagma
