@@ -7,8 +7,9 @@ module Hagma
       @mod = mod
       @owner = owner
       @hook = hook
-      # trace before Hagma::Hook::module_event
-      @backtrace_locations = Backtrace::Location.locations(BACKTRACE_METHOD_NUMBER)
+      # backtrace if block is given, or return nil
+      # this lets us test this class easily
+      @backtrace_locations = yield BACKTRACE_METHOD_NUMBER if block_given?
     end
   end
 end
