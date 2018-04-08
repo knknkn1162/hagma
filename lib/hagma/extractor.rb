@@ -3,33 +3,48 @@ module Hagma
   class Extractor
     WINDOW_SIZE = 8
     attr_reader :absolute_path, :lineno
-    def initialize(absolute_path, lineno)
+
+    class << self
+      def path_lines
+        @path_lines ||= Hash.new { |h, k| h[k] = [] }
+      end
+
+      def full_lines(path)
+        path_lines[path] ||= File.read(path).split("\n")
+      end
+
+      def format(lines, cur_no)
+        lastno = lines.keys.max
+        lines.map do |num, line|
+          sign = num == cur_no ? '=> ' : ' ' * 3
+          format('%s%*d: %s', sign, lastno.to_s.size, num, line)
+        end.join("\n")
+      end
+    end
+
+    # @param absolute_path [String] absolute path
+    # @param lineno [Integer] lineno
+    # @param block [Proc] formatter which requires lines and current lineno and returns string.
+    def initialize(absolute_path, lineno, &block)
       @absolute_path = absolute_path
       @lineno = lineno
+      @formatter = block
     end
 
     def to_s
-      lastno = lines.keys.max unless lines.empty?
-      lines.map do |num, line|
-        sign = num == lineno ? '=> ' : ' ' * 3
-        format('%s%*d: %s', sign, lastno.to_s.size, num, line)
-      end.join("\n")
+      @formatter ? @formatter.call(lines, lineno) : self.class.format(lines, lineno)
+    end
+
+    # @return [Hash] hash from lineno to String
+    def lines(size = WINDOW_SIZE)
+      @lines ||= extract_lines self.class.full_lines(absolute_path), size
     end
 
     private
 
-    def lines(size = WINDOW_SIZE)
-      @lines ||= begin
-        File.open(file_path) do |file|
-          res = {}
-          file.each_line.each_with_index do |line, idx|
-            if ((lineno - size)..(lineno + size)).cover?(idx + 1)
-              res[idx + 1] = line
-            end
-          end
-          res
-        end
-      end
+    def extract_lines(lines, size)
+      startno = [lineno - size, 0].max
+      lines[startno..(lineno + size)].map.with_index(startno) { |line, idx| [idx, line] }.to_h
     end
   end
 end
