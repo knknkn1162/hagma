@@ -1,4 +1,5 @@
 module TestCase
+  # :nodoc:
   class BaseClass
     def base_instance_method; end
     class << self

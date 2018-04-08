@@ -1,5 +1,6 @@
 module Hagma
-  class SourceAnalyzer
+  # analyze  from files
+  class Extractor
     WINDOW_SIZE = 8
     attr_reader :absolute_path, :lineno
     def initialize(absolute_path, lineno)
