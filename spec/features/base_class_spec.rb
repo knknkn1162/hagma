@@ -3,27 +3,28 @@ require 'test_case/base_class'
 
 RSpec.describe TestCase::BaseClass do
   # evaluate only once
-  let!(:events) { Hagma::Events.methods }
+  let(:klass) { TestCase::BaseClass }
+  let!(:events) { Hagma::Events.method_collection }
   let(:method_suites) do
-    events.map { |m| [m.owner, m.name, m.hook] }
+    events[klass].map { |m| [m.owner, m.name, m.hook] }
   end
 
   context 'when Object#method_added @ BaseClass#base_instance_method' do
     it 'belongs to Events.methods' do
-      expect(method_suites).to include [TestCase::BaseClass, :base_instance_method, :method_added]
+      expect(method_suites).to include [klass, :base_instance_method, :method_added]
     end
   end
 
   context 'when Object#singleton_method_added @ BaseClass#base_singleton_method' do
     it 'belongs to Events.methods' do
-      expect(method_suites).to include [TestCase::BaseClass, :base_singleton_method, :singleton_method_added]
+      expect(method_suites).to include [klass, :base_singleton_method, :singleton_method_added]
     end
   end
 
   context 'when Hagma::MethodInfo#analyze method' do
     let(:method_info) do
-      events.find do |m|
-        [m.owner, m.name, m.hook] == [TestCase::BaseClass, :base_singleton_method, :singleton_method_added]
+      events[klass].find do |m|
+        [m.owner, m.name, m.hook] == [klass, :base_singleton_method, :singleton_method_added]
       end
     end
     it 'coincides source_location & head of caller_locations' do
