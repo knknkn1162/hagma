@@ -4,7 +4,7 @@ require 'hagma/backtrace/location'
 module Hagma
   # store information on the designated method and you can analyze it.
   class MethodInfo
-    attr_reader :owner, :name, :hook
+    attr_reader :name, :owner, :hook
     BACKTRACE_METHOD_NUMBER = 5
     def initialize(mth, owner, hook)
       @name = mth
@@ -18,7 +18,7 @@ module Hagma
       find_method.tap do |method|
         loc = method.source_location
         @location = Location.new(absolute_path: File.expand_path(loc[0]), lineno: loc[1]) if loc
-        @owner = method.owner
+        # @owner = method.owner
         @receiver = method.receiver unless method.class == UnboundMethod
         @params = method.parameters
         @original_name = method.original_name

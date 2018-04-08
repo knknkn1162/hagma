@@ -5,20 +5,20 @@ module Hagma
   # Add method or module event and stores
   class Events
     class << self
-      def methods
-        @methods ||= []
+      def method_collection
+        @method_collection ||= Hash.new { |h, k| h[k] = [] }
       end
 
-      def modules
-        @modules ||= []
+      def module_collection
+        @module_collection ||= Hash.new { |h, k| h[k] = [] }
       end
 
       def add_method_event(method, owner, hook)
-        methods << MethodInfo.new(method, owner, hook)
+        method_collection[owner] << MethodInfo.new(method, owner, hook)
       end
 
       def add_module_event(mod, owner, hook)
-        modules << ModuleInfo.new(mod, owner, hook)
+        module_collection[owner] << ModuleInfo.new(mod, owner, hook)
       end
     end
   end
