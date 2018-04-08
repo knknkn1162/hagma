@@ -16,13 +16,11 @@ module Hagma
     name? :singleton
     name? :instance
 
-    def initialize(mth, owner, hook)
+    def initialize(mth, owner, hook, backtrace = true)
       @name = mth
       @owner = owner
       @hook = hook
-      # backtrace if block is given, or return nil
-      # this lets us test this class easily
-      @backtrace_locations = yield BACKTRACE_METHOD_NUMBER if block_given?
+      @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
     end
 
     def analyze

@@ -3,13 +3,11 @@ module Hagma
   class ModuleInfo
     attr_reader :mod, :owner, :hook
     BACKTRACE_METHOD_NUMBER = 5
-    def initialize(mod, owner, hook)
+    def initialize(mod, owner, hook, backtrace = true)
       @mod = mod
       @owner = owner
       @hook = hook
-      # backtrace if block is given, or return nil
-      # this lets us test this class easily
-      @backtrace_locations = yield BACKTRACE_METHOD_NUMBER if block_given?
+      @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
     end
   end
 end

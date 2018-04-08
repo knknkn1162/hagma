@@ -14,15 +14,11 @@ module Hagma
       end
 
       def add_method_event(method, owner, hook)
-        method_collection[owner] << MethodInfo.new(method, owner, hook) do |stack_level|
-          Backtrace::Location.locations(stack_level + 1)
-        end
+        method_collection[owner] << MethodInfo.new(method, owner, hook)
       end
 
       def add_module_event(mod, owner, hook)
-        module_collection[owner] << ModuleInfo.new(mod, owner, hook) do |stack_level|
-          Backtrace::Location.locations(stack_level + 1)
-        end
+        module_collection[owner] << ModuleInfo.new(mod, owner, hook)
       end
     end
   end

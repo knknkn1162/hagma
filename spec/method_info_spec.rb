@@ -3,10 +3,14 @@ require 'test_case/base_class'
 
 RSpec.describe Hagma::MethodInfo do
   describe 'when test_case/base_class' do
+    let(:method_info) { Hagma::MethodInfo.new(met, owner, hook, backtrace) }
+
+    # default
     let(:met) { :base_instance_method }
     let(:owner) { TestCase::BaseClass }
     let(:hook) { :method_added }
-    let(:method_info) { Hagma::MethodInfo.new(met, owner, hook) }
+    let(:backtrace) { false }
+
     context 'when accessors in Hagma::MethodInfo' do
       it 'can be accessed by dot operator' do
         expect([method_info.name, method_info.owner, method_info.hook]).to eq [met, owner, hook]
