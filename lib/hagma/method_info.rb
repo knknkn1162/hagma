@@ -6,6 +6,16 @@ module Hagma
   class MethodInfo
     attr_reader :name, :owner, :hook
     BACKTRACE_METHOD_NUMBER = 5
+    class << self
+      def name?(name)
+        define_method("#{name}?") do
+          method_type == name
+        end
+      end
+    end
+    name? :singleton
+    name? :instance
+
     def initialize(mth, owner, hook)
       @name = mth
       @owner = owner
@@ -33,10 +43,6 @@ module Hagma
 
     def method_type
       @method_type ||= hook.to_s.include?('singleton') ? :singleton : :instance
-    end
-
-    def singleton?
-      method_type == :singleton
     end
   end
 end
