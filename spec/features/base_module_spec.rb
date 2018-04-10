@@ -9,6 +9,12 @@ RSpec.describe TestCase::BaseModule do
     events[mod].map { |m| [m.owner, m.name, m.hook] }
   end
 
+  context 'when array size of method_suites' do
+    it 'is 2' do
+      expect(method_suites.size).to eq 2
+    end
+  end
+
   context 'when Object#method_added @ BaseModule#base_instance_method' do
     it 'belongs to Events.methods' do
       expect(method_suites).to include [mod, :base_instance_method, :method_added]
