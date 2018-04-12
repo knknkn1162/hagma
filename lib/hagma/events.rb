@@ -3,7 +3,7 @@ require 'hagma/module_info'
 
 module Hagma
   # Add method or module event and stores
-  class Events
+  module Events
     class << self
       def method_collection
         @method_collection ||= Hash.new { |h, k| h[k] = [] }
