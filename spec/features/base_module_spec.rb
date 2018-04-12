@@ -4,7 +4,7 @@ require 'test_case/base_module'
 RSpec.describe TestCase::BaseModule do
   # evaluate only once
   let(:mod) { TestCase::BaseModule }
-  let!(:events) { Hagma::Events.method_collection }
+  let!(:events) { Hagma::MethodInfo.method_collection }
   let(:method_suites) do
     events[mod].map { |m| [m.owner, m.name, m.hook] }
   end

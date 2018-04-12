@@ -3,7 +3,7 @@ require 'test_case/method_undefined_class'
 
 RSpec.describe TestCase::MethodUndefinedClass do
   let(:klass) { TestCase::MethodUndefinedClass }
-  let!(:events) { Hagma::Events.method_collection }
+  let!(:events) { Hagma::MethodInfo.method_collection }
   let(:method_suites) do
     events[klass].map { |m| [m.name, m.owner, m.hook] }
   end

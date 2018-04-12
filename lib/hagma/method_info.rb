@@ -12,6 +12,10 @@ module Hagma
           method_type == name
         end
       end
+
+      def method_collection
+        @method_collection ||= Hash.new { |h, k| h[k] = [] }
+      end
     end
     name? :singleton
     name? :instance
@@ -41,6 +45,10 @@ module Hagma
 
     def method_type
       @method_type ||= hook.to_s.include?('singleton') ? :singleton : :instance
+    end
+
+    def push
+      self.class.module_collection[owner] << self
     end
   end
 end
