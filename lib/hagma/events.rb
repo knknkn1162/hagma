@@ -9,16 +9,13 @@ module Hagma
         @method_collection ||= Hash.new { |h, k| h[k] = [] }
       end
 
-      def module_collection
-        @module_collection ||= Hash.new { |h, k| h[k] = [] }
-      end
-
       def add_method_event(method, owner, hook)
         method_collection[owner] << MethodInfo.new(method, owner, hook)
       end
 
       def add_module_event(mod, owner, hook)
-        module_collection[owner] << ModuleInfo.new(mod, owner, hook)
+        module_info = ModuleInfo.new(mod, owner, hook)
+        module_info.push
       end
     end
   end
