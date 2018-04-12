@@ -1,5 +1,3 @@
-require 'hagma/events'
-
 module Hagma
   module Events
     # the module summaries module_collection & method_collection
