@@ -27,7 +27,7 @@ RSpec.describe Hagma::Events::Summary do
   let(:method_collection) do
     {
       owner => [instance_method1_info, singleton_method1_info],
-      other_owner => [instance_method1_info, singleton_method1_info]
+      other_owner => [instance_method2_info, singleton_method2_info]
     }
   end
 

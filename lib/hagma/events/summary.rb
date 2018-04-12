@@ -29,9 +29,8 @@ module Hagma
 
       # @return [Hash] the form of {owner: [OwnerMethods]}
       def owner_stats
-        (mixins.keys + @method_collection.map(&:owner)).uniq.map do |owner|
-          owner_methods = @method_collection.select { |method_info| method_info.owner == owner }
-          [owner, OwnerMethods.new(owner, owner_methods, mixins[owner][:included], mixins[owner][:extended], mixins[owner][:prepended])]
+        @owner_stats ||= (mixins.keys + @method_collection.keys).uniq.map do |owner|
+          [owner, OwnerMethods.new(owner, @method_collection[owner], mixins[owner][:included], mixins[owner][:extended], mixins[owner][:prepended])]
         end.to_h
       end
 
