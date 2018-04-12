@@ -14,8 +14,7 @@ module Hagma
       end
 
       def add_module_event(mod, owner, hook)
-        module_info = ModuleInfo.new(mod, owner, hook)
-        module_info.push
+        ModuleInfo.new(mod, owner, hook).push
       end
     end
   end
