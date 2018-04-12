@@ -48,7 +48,7 @@ module Hagma
     end
 
     def push
-      self.class.module_collection[owner] << self
+      self.class.method_collection[owner] << self
     end
   end
 end
