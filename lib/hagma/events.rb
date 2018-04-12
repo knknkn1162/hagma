@@ -4,6 +4,7 @@ require 'hagma/module_info'
 module Hagma
   # Add method or module event and stores
   module Events
+    autoload :Summary, 'hagma/events/summary'
     class << self
       def add_method_event(method, owner, hook)
         MethodInfo.new(method, owner, hook).push

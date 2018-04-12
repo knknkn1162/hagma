@@ -25,7 +25,10 @@ RSpec.describe Hagma::Events::Summary do
   let(:prepended_module2_info) { Hagma::ModuleInfo.new(:prepended_module2, other_owner, :prepended) }
 
   let(:method_collection) do
-    [instance_method1_info, instance_method2_info, singleton_method1_info, singleton_method2_info]
+    {
+      owner => [instance_method1_info, singleton_method1_info],
+      other_owner => [instance_method1_info, singleton_method1_info]
+    }
   end
 
   let(:module_collection) do
