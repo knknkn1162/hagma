@@ -8,10 +8,10 @@ module Hagma
       # @param excluded [list[MethodInfo]]
       # @param prepended [list[MethodInfo]]
       OwnerMethods = Struct.new(:owner, :base, :included, :extended, :prepended)
-      # @param method [MethodInfo]
-      # @param owner [Constant]
+      # @param method_info [MethodInfo]
+      # @param owner [Constant] The ancestor that the method has.
       # @param level Integer
-      MethodStat = Struct.new(:method, :owner, :level)
+      MethodStat = Struct.new(:method_info, :owner, :level)
 
       # @param method_collection [list[MethodInfo]]
       # @param module_collection [list[ModuleInfo]]
