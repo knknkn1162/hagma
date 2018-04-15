@@ -53,15 +53,15 @@ module Hagma
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
-        klass.ancestors.map.with_index do |ancestor, idx|
+        klass.ancestors.map.with_index do |ancestor, level|
           type = :instance?
           # prepend
           if ancestor.class == Class
-            prepended_stats = get_module_stats(mixins[ancestor][:prepended] || [], ancestor, type, idx)
+            prepended_stats = get_module_stats(mixins[ancestor][:prepended] || [], ancestor, type, level)
             self.class.merge!(res, prepended_stats)
           end
           # instance
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, idx)
+          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, level)
           self.class.merge!(res, base_stats)
         end
         res
@@ -71,14 +71,14 @@ module Hagma
       def singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         # trace singleton chain
-        klass.ancestors.map.with_index do |ancestor, idx|
+        klass.ancestors.map.with_index do |ancestor, level|
           type = :singleton?
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, idx)
+          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, level)
           self.class.merge!(res, base_stats)
 
           # extended
           if ancestor.class == Class
-            prepended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, type, idx)
+            prepended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, type, level)
             self.class.merge!(res, prepended_stats)
           end
         end
