@@ -39,7 +39,7 @@ RSpec.describe Hagma::Events::Summary do
   end
 
   let!(:klass) { Hagma::Events::Summary }
-  context 'when #owner_stats' do
+  context 'when #klass_stat' do
     let(:owner_methods) do
       klass::OwnerMethods.new(
         owner,
@@ -50,19 +50,9 @@ RSpec.describe Hagma::Events::Summary do
       )
     end
 
-    let(:other_owner_methods) do
-      klass::OwnerMethods.new(
-        other_owner,
-        [instance_method2_info, singleton_method2_info],
-        [included_module2_info],
-        [extended_module2_info],
-        [prepended_module2_info]
-      )
-    end
     it 'returns hash which key is owner and value is OwnerMethods' do
-      res = klass.new(method_collection, module_collection).owner_stats
-      expect(res[owner]).to eq owner_methods
-      expect(res[other_owner]).to eq other_owner_methods
+      res = klass.new(method_collection, module_collection).klass_stat owner
+      expect(res).to eq owner_methods
     end
   end
 end

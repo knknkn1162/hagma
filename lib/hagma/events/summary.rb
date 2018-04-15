@@ -32,10 +32,8 @@ module Hagma
       end
 
       # @return [Hash] the form of {owner: [OwnerMethods]}
-      def owner_stats
-        @owner_stats ||= (mixins.keys + @method_collection.keys).uniq.map do |owner|
-          [owner, OwnerMethods.new(owner, @method_collection[owner], mixins[owner][:included], mixins[owner][:extended], mixins[owner][:prepended])]
-        end.to_h
+      def klass_stat klass
+        OwnerMethods.new(klass, @method_collection[klass], mixins[klass][:included], mixins[klass][:extended], mixins[klass][:prepended])
       end
 
       # The result includes klass's ancestors different from #owner_stats
