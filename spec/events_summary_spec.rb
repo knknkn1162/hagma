@@ -50,7 +50,7 @@ RSpec.describe Hagma::Events::Summary do
       )
     end
 
-    it 'returns hash which key is owner and value is OwnerMethods' do
+    it 'returns owner_methods' do
       res = klass.new(method_collection, module_collection).klass_stat owner
       expect(res).to eq owner_methods
     end
