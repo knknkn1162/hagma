@@ -9,7 +9,7 @@ module Hagma
       # @param prepended [list[MethodInfo]]
       OwnerMethods = Struct.new(:owner, :base, :included, :extended, :prepended)
       # @param method [MethodInfo]
-      # @param owner [ModuleInfo|Symbol]
+      # @param owner [Constant]
       # @param level Integer
       MethodStat = Struct.new(:method, :owner, :level)
 
@@ -51,17 +51,24 @@ module Hagma
 
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def instance_stat(klass)
-        res = {}
+        res = Hash.new { |h, k| h[k] = [] }
         klass.ancestors.map.with_index do |ancestor, idx|
           # prepend
           if ancestor.class == Class
-            owner_stats[ancestor].prepended.select(&:instance?).each do |method_info|
-              res[method_info.name] ||= MethodStat.new(method_info, module_info, idx)
+            if (ancestor_prepended = owner_stats[ancestor]&.prepended)
+              ancestor_prepended.select(&:instance?).each do |module_info|
+                module_functions[module_info.mod].each do |method_info|
+                  # we use `<<`, because the method may jump to super_method
+                  res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
+                end
+              end
             end
           end
           # instance
-          owner_stats[ancestor].base.select(&:instance?).each do |method_info|
-            res[method_info.name] ||= MethodStat.new(method_info, module_info, idx)
+          if (ancestor_base = owner_stats[ancestor]&.base)
+            ancestor_base.select(&:instance?).each do |method_info|
+              res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
+            end
           end
         end
         res
