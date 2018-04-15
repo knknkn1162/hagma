@@ -40,4 +40,23 @@ RSpec.describe TestCase::BaseModule do
       expect([source_location.absolute_path, source_location.lineno]).to eq [caller_location.absolute_path, caller_location.lineno]
     end
   end
+  context 'when Hagma::Events::Summary#stat' do
+    let(:instance_m) { method_evs[mod].find { |m| m.name == :base_instance_method } }
+    let(:singleton_m) { method_evs[mod].find { |m| m.name == :base_singleton_method } }
+    let(:summary) { Hagma::Events::Summary.new Hagma::MethodInfo.method_collection, Hagma::ModuleInfo.module_collection }
+    let(:stats) { summary.klass_stats mod }
+
+    let(:instance_stat) { Hagma::Events::Summary::MethodStat.new(instance_m, mod, 0) }
+    let(:singleton_stat) { Hagma::Events::Summary::MethodStat.new(singleton_m, mod, 0) }
+
+    it 'is true when instance_method' do
+      expect(stats[:instance].keys).to eq %i[base_instance_method]
+      expect(stats[:instance][:base_instance_method]).to eq [instance_stat]
+    end
+
+    it 'is true when singleton_method' do
+      expect(stats[:singleton].keys).to eq %i[base_singleton_method]
+      expect(stats[:singleton][:base_singleton_method]).to eq [singleton_stat]
+    end
+  end
 end
