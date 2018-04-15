@@ -13,6 +13,14 @@ module Hagma
       # @param level Integer
       MethodStat = Struct.new(:method_info, :owner, :level)
 
+      class << self
+        def merge!(src, dst)
+          dst.keys.each do |method_name|
+            src[method_name] += dst[method_name]
+          end
+        end
+      end
+
       # @param method_collection [list[MethodInfo]]
       # @param module_collection [list[ModuleInfo]]
       def initialize(method_collection, module_collection)
@@ -46,23 +54,15 @@ module Hagma
       def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         klass.ancestors.map.with_index do |ancestor, idx|
+          type = :instance?
           # prepend
           if ancestor.class == Class
-            if (ancestor_prepended = mixins[ancestor][:prepended])
-              ancestor_prepended.select(&:instance?).each do |module_info|
-                module_functions[module_info.mod].each do |method_info|
-                  # we use `<<`, because the method may jump to super_method
-                  res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
-                end
-              end
-            end
+            prepended_stats = get_module_stats(mixins[ancestor][:prepended] || [], ancestor, type, idx)
+            self.class.merge!(res, prepended_stats)
           end
           # instance
-          if (ancestor_base = @method_collection[ancestor])
-            ancestor_base.select(&:instance?).each do |method_info|
-              res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
-            end
-          end
+          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, idx)
+          self.class.merge!(res, base_stats)
         end
         res
       end
@@ -108,6 +108,23 @@ module Hagma
           end
           res
         end
+      end
+
+      def get_module_stats(modules, klass, type, level)
+        res = Hash.new { |h, k| h[k] = [] }
+        modules.each do |module_info|
+          method_stats = get_method_stats(module_functions[module_info.mod] || [], klass, type, level)
+          self.class.merge!(res, method_stats)
+        end
+        res
+      end
+
+      def get_method_stats(methods, klass, type, level)
+        res = Hash.new { |h, k| h[k] = [] }
+        methods.select { |method_info| method_info.__send__(type) }.each do |method_info|
+          res[method_info.name] << MethodStat.new(method_info, klass, level)
+        end
+        res
       end
     end
   end
