@@ -103,12 +103,13 @@ module Hagma
         end
       end
 
+      # @return [Hash] form of { Class: List[MethodInfo] }
       def module_functions
         @module_functions ||= begin
           res = Hash.new { |h, k| h[k] = [] }
           @method_collection.each do |owner, mets|
-            next if owner.class == Module
-            res[owner] = mets.select(&:singleton?)
+            next unless owner.class == Module
+            res[owner] = mets.select(&:instance?)
           end
           res
         end

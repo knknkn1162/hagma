@@ -5,16 +5,20 @@ require 'hagma/method_info'
 module TestCase
   class Sample; end
   class Other; end
+  module SampleModule; end
 end
 
 RSpec.describe Hagma::Events::Summary do
   let(:owner) { TestCase::Sample }
   let(:other_owner) { TestCase::Other }
+  let(:mod) { TestCase::SampleModule }
   # method
   let(:instance_method1_info) { Hagma::MethodInfo.new(:instance_method1, owner, :method_added) }
   let(:instance_method2_info) { Hagma::MethodInfo.new(:instance_method2, other_owner, :method_added) }
   let(:singleton_method1_info) { Hagma::MethodInfo.new(:singleton_method1, owner, :singleton_method_added) }
   let(:singleton_method2_info) { Hagma::MethodInfo.new(:singleton_method2, other_owner, :singleton_method_added) }
+  let(:module_instance_method_info) { Hagma::MethodInfo.new(:module_instance_method, mod, :method_added) }
+  let(:module_function_info) { Hagma::MethodInfo.new(:module_function, mod, :singleton_method_added) }
 
   # module
   let(:included_module1_info) { Hagma::ModuleInfo.new(:included_module1, owner, :included) }
@@ -27,7 +31,8 @@ RSpec.describe Hagma::Events::Summary do
   let(:method_collection) do
     {
       owner => [instance_method1_info, singleton_method1_info],
-      other_owner => [instance_method2_info, singleton_method2_info]
+      other_owner => [instance_method2_info, singleton_method2_info],
+      mod => [module_instance_method_info, module_function_info]
     }
   end
 
@@ -39,20 +44,11 @@ RSpec.describe Hagma::Events::Summary do
   end
 
   let!(:klass) { Hagma::Events::Summary }
-  context 'when #klass_stat' do
-    let(:owner_methods) do
-      klass::OwnerMethods.new(
-        owner,
-        [instance_method1_info, singleton_method1_info],
-        [included_module1_info],
-        [extended_module1_info],
-        [prepended_module1_info]
-      )
-    end
-
-    it 'returns owner_methods' do
-      res = klass.new(method_collection, module_collection).klass_stat owner
-      expect(res).to eq owner_methods
+  context 'when #module_functions' do
+    it 'is hash' do
+      res = klass.new(method_collection, module_collection).module_functions
+      expect(res.keys).to eq [mod]
+      expect(res[mod]).to eq [module_instance_method_info]
     end
   end
 end
