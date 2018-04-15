@@ -72,7 +72,7 @@ module Hagma
       # get the singleton_method information including ancestors
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
       def singleton_stats(klass)
-        klass.class == Module ? module_singleton_stats(klass) : klass_singleton_stats(klass)
+        klass.class == Module ? module_singleton_stats(klass) : class_singleton_stats(klass)
       end
 
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
@@ -82,10 +82,11 @@ module Hagma
       end
 
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
-      def klass_singleton_stats(klass)
+      def class_singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         # trace singleton chain
         klass.ancestors.map.with_index do |ancestor, level|
+          next if ancestor.class == Module
           # base
           base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
           self.class.merge!(res, base_stats)
