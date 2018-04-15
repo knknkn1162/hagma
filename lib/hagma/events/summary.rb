@@ -76,25 +76,43 @@ module Hagma
 
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
       def singleton_stat(klass)
-        res = {}
+        res = Hash.new { |h, k| h[k] = [] }
         # tracesingleton chain
         klass.ancestors.map.with_index do |ancestor, idx|
-          # res = method_stats(ancestor, :base, :singleton).update(res)
-          owner_stats[ancestor].base.select(&:singleton).each do |method_info|
-            res[method_info.name] ||= MethodStat(method_info, ancestor, idx)
+          if (ancestor_base = owner_stats[ancestor]&.base)
+            ancestor_base.select(&:singleton?).each do |method_info|
+              res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
+            end
           end
           next if ancestor.class == Module
-          # res = method_stats(ancestor, :extended, :singleton).update(res)
-          owner_stats[ancestor].extended.select(&:singleton).each do |method_info|
-            res[method_info.name] ||= MethodStat.new(method_info, module_info, idx)
+          if (ancestor_extended = owner_stats[ancestor]&.extended)
+            ancestor_extended.each do |module_info|
+              module_functions[module_info.mod].each do |method_info|
+                res[method_info.name] << MethodStat.new(method_info, module_info.mod, idx)
+              end
+            end
           end
         end
         # trace Class class and its ancestors
         return res if klass.class == Module
+        return res unless klass.singleton_class?
         Class.ancestors.map.with_index(klass.ancestors.size) do |ancestor, idx|
-          owner_stats[ancestor].base.select(&:instance).each do |method_info|
-            res[method_info.name] ||= MethodStat.new(method_info, ancestor, idx)
+          if (ancestor_base = owner_stats[ancestor]&.base)
+            ancestor_base.select(&:instance?).each do |method_info|
+              res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
+            end
           end
+        end
+      end
+
+      def module_functions
+        @module_functions ||= begin
+          res = Hash.new { |h, k| h[k] = [] }
+          @method_collection.each do |owner, mets|
+            next if owner.class == Module
+            res[owner] = mets.select(&:singleton?)
+          end
+          res
         end
       end
     end
