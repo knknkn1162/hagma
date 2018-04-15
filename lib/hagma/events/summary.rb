@@ -88,7 +88,7 @@ module Hagma
           if (ancestor_extended = owner_stats[ancestor]&.extended)
             ancestor_extended.each do |module_info|
               module_functions[module_info.mod].each do |method_info|
-                res[method_info.name] << MethodStat.new(method_info, module_info.mod, idx)
+                res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
               end
             end
           end
