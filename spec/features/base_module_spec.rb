@@ -4,9 +4,9 @@ require 'test_case/base_module'
 RSpec.describe TestCase::BaseModule do
   # evaluate only once
   let(:mod) { TestCase::BaseModule }
-  let!(:events) { Hagma::MethodInfo.method_collection }
+  let!(:method_evs) { Hagma::MethodInfo.method_collection }
   let(:method_suites) do
-    events[mod].map { |m| [m.owner, m.name, m.hook] }
+    method_evs[mod].map { |m| [m.owner, m.name, m.hook] }
   end
 
   context 'when array size of method_suites' do
@@ -29,7 +29,7 @@ RSpec.describe TestCase::BaseModule do
 
   context 'when Hagma::MethodInfo#analyze method' do
     let(:method_info) do
-      events[mod].find do |m|
+      method_evs[mod].find do |m|
         [m.owner, m.name, m.hook] == [mod, :base_singleton_method, :singleton_method_added]
       end
     end
