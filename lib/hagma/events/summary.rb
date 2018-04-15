@@ -18,6 +18,7 @@ module Hagma
           dst.keys.each do |method_name|
             src[method_name] += dst[method_name]
           end
+          src
         end
       end
 
@@ -50,6 +51,7 @@ module Hagma
         end.to_h
       end
 
+      # get the instance_method information including ancestors
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
@@ -67,30 +69,32 @@ module Hagma
         res
       end
 
+      # get the singleton_method information including ancestors
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
       def singleton_stats(klass)
+        klass.class == Module ? module_singleton_stats(klass) : klass_singleton_stats(klass)
+      end
+
+      # @return [Hash] the form of {singleton_method1: [MethodStat]}
+      def module_singleton_stats(klass)
+        res = Hash.new { |h, k| h[k] = [] }
+        res.update(get_method_stats(@method_collection[klass] || [], klass, :singleton?, 0))
+      end
+
+      # @return [Hash] the form of {singleton_method1: [MethodStat]}
+      def klass_singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         # trace singleton chain
         klass.ancestors.map.with_index do |ancestor, level|
-          if ancestor.class == Class || (ancestor == klass && klass.class == Module)
-            base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
-            self.class.merge!(res, base_stats)
-          end
-
+          # base
+          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
+          self.class.merge!(res, base_stats)
           # extended
-          if ancestor.class == Class
-            prepended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, :instance?, level)
-            self.class.merge!(res, prepended_stats)
-          end
+          extended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, :instance?, level)
+          self.class.merge!(res, extended_stats)
         end
-
         # trace Class class and its ancestors
-        if klass.class == Class && klass.singleton_class?
-          class_stats = instance_stats(Class)
-          self.class.merge(res, class_stats)
-        end
-
-        res
+        klass.singleton_class? ? self.class.merge(res, instance_stats(Class)) : res
       end
 
       # @return [Hash] form of { Class: List[MethodInfo] }
