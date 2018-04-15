@@ -72,13 +72,14 @@ module Hagma
         res = Hash.new { |h, k| h[k] = [] }
         # trace singleton chain
         klass.ancestors.map.with_index do |ancestor, level|
-          type = :singleton?
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, level)
-          self.class.merge!(res, base_stats)
+          if ancestor.class == Class || (ancestor == klass && klass.class == Module)
+            base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
+            self.class.merge!(res, base_stats)
+          end
 
           # extended
           if ancestor.class == Class
-            prepended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, type, level)
+            prepended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, :instance?, level)
             self.class.merge!(res, prepended_stats)
           end
         end
