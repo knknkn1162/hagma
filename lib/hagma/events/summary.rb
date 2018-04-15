@@ -83,12 +83,11 @@ module Hagma
           end
         end
 
-        return res if klass.class == Module
-        return res unless klass.singleton_class?
-
         # trace Class class and its ancestors
-        class_stats = instance_stats(Class)
-        self.class.merge(res, class_stats)
+        if klass.class == Class && klass.singleton_class?
+          class_stats = instance_stats(Class)
+          self.class.merge(res, class_stats)
+        end
 
         res
       end
