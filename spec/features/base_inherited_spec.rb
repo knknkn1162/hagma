@@ -17,7 +17,7 @@ RSpec.describe TestCase::BaseInherited do
     let(:super_singleton_m) { method_evs[super_klass].find { |m| m.name == :common_singleton_method } }
 
     let(:summary) { Hagma::Events::Summary.new Hagma::MethodInfo.method_collection, Hagma::ModuleInfo.module_collection }
-    let(:stats) { summary.klass_stats klass }
+    let(:stats) { summary.klass_stats inherited_klass }
 
     let(:instance_stats) do
       [Hagma::Events::Summary::MethodStat.new(inherited_instance_m, inherited_klass, 0),
