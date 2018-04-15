@@ -30,7 +30,6 @@ RSpec.describe TestCase::BaseInherited do
     end
 
     it 'is true when instance_method' do
-      expect(stats[:instance].keys).to eq %i[common_instance_method singleton_method_added singleton_method_removed singleton_method_undefined]
       expect(stats[:instance][:common_instance_method]).to eq instance_stats
     end
 

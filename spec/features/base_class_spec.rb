@@ -51,7 +51,6 @@ RSpec.describe TestCase::BaseClass do
     let(:singleton_stat) { Hagma::Events::Summary::MethodStat.new(singleton_m, klass, 0) }
 
     it 'is true when instance_method' do
-      expect(stats[:instance].keys).to eq %i[base_instance_method singleton_method_added singleton_method_removed singleton_method_undefined]
       expect(stats[:instance][:base_instance_method]).to eq [instance_stat]
     end
 
