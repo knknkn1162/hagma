@@ -44,7 +44,12 @@ module Hagma
     end
 
     def method_type
-      @method_type ||= hook.to_s.include?('singleton') ? :singleton : :instance
+      case hook
+      when :method_added, :method_removed, :method_undefined then
+        :instance
+      when :singleton_method_added, :singleton_method_removed, :singleton_method_undefined then
+        :singleton
+      end
     end
 
     def push
