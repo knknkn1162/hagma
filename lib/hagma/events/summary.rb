@@ -31,29 +31,24 @@ module Hagma
         end
       end
 
-      # @return [Hash] the form of {owner: [OwnerMethods]}
-      def klass_stat klass
-        OwnerMethods.new(klass, @method_collection[klass], mixins[klass][:included], mixins[klass][:extended], mixins[klass][:prepended])
-      end
-
-      # The result includes klass's ancestors different from #owner_stats
+      # The result includes klass's ancestors different from #klass_stat
       # @param klass [Class|Module] class or module
       # @param type [Symbol] :singleton or :instance or nil(all)
       # @return [Hash] hash keys are :instance or :singleton or both and its value is MethodStat
-      def stat(klass, type = nil)
+      def klass_stats(klass, type = nil)
         types = type.nil? ? %i[instance singleton] : type
         types.map do |t|
-          [t, __send__("#{t}_stat", klass)]
+          [t, __send__("#{t}_stats", klass)]
         end.to_h
       end
 
       # @return [Hash] the form of {instance_method1: [MethodStat]}
-      def instance_stat(klass)
+      def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         klass.ancestors.map.with_index do |ancestor, idx|
           # prepend
           if ancestor.class == Class
-            if (ancestor_prepended = owner_stats[ancestor]&.prepended)
+            if (ancestor_prepended = mixins[ancestor][:prepended])
               ancestor_prepended.select(&:instance?).each do |module_info|
                 module_functions[module_info.mod].each do |method_info|
                   # we use `<<`, because the method may jump to super_method
@@ -63,7 +58,7 @@ module Hagma
             end
           end
           # instance
-          if (ancestor_base = owner_stats[ancestor]&.base)
+          if (ancestor_base = @method_collection[ancestor])
             ancestor_base.select(&:instance?).each do |method_info|
               res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
             end
@@ -73,17 +68,17 @@ module Hagma
       end
 
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
-      def singleton_stat(klass)
+      def singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         # tracesingleton chain
         klass.ancestors.map.with_index do |ancestor, idx|
-          if (ancestor_base = owner_stats[ancestor]&.base)
+          if (ancestor_base = @method_collection[ancestor])
             ancestor_base.select(&:singleton?).each do |method_info|
               res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
             end
           end
           next if ancestor.class == Module
-          if (ancestor_extended = owner_stats[ancestor]&.extended)
+          if (ancestor_extended = mixins[ancestor][:extended])
             ancestor_extended.each do |module_info|
               module_functions[module_info.mod].each do |method_info|
                 res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
@@ -95,7 +90,7 @@ module Hagma
         return res if klass.class == Module
         return res unless klass.singleton_class?
         Class.ancestors.map.with_index(klass.ancestors.size) do |ancestor, idx|
-          if (ancestor_base = owner_stats[ancestor]&.base)
+          if (ancestor_base = @method_collection[ancestor])
             ancestor_base.select(&:instance?).each do |method_info|
               res[method_info.name] << MethodStat.new(method_info, ancestor, idx)
             end
