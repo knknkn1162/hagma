@@ -23,7 +23,7 @@ module Hagma
       # @return [Hash] {owner1: {extended: [module_info], ...}, owner2: {...} }
       def mixins
         @mixins ||= begin
-          hash = Hash.new { |h, k| h[k] = [] }
+          hash = Hash.new { |h, k| h[k] = {} }
           @module_collection.each do |owner, module_info|
             hash[owner] = module_info.group_by(&:hook)
           end
