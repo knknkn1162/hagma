@@ -55,7 +55,7 @@ module Hagma
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
-        klass.ancestors.map.with_index do |ancestor, level|
+        klass.ancestors.map.with_index(-offset(klass)) do |ancestor, level|
           # instance
           base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :instance?, level)
           self.class.merge!(res, base_stats)
@@ -78,11 +78,17 @@ module Hagma
         self.class.merge!(res, extended_stats)
       end
 
+      # search index of klass in ancestors chain to support prepend keyword
+      # @return [Integer]
+      def offset(klass)
+        klass.ancestors.index { |ancestor| ancestor == klass }
+      end
+
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
       def class_singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         # trace singleton chain
-        klass.ancestors.map.with_index do |ancestor, level|
+        klass.ancestors.map.with_index(-offset(klass)) do |ancestor, level|
           next if ancestor.class == Module
           # base
           base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
