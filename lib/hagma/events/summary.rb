@@ -79,6 +79,9 @@ module Hagma
       def module_singleton_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         res.update(get_method_stats(@method_collection[klass] || [], klass, :singleton?, 0))
+        # extended
+        extended_stats = get_module_stats(mixins[klass][:extended] || [], klass, :instance?, 0)
+        self.class.merge!(res, extended_stats)
       end
 
       # @return [Hash] the form of {singleton_method1: [MethodStat]}
