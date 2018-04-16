@@ -56,14 +56,8 @@ module Hagma
       def instance_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         klass.ancestors.map.with_index do |ancestor, level|
-          type = :instance?
-          # prepend
-          if ancestor.class == Class
-            prepended_stats = get_module_stats(mixins[ancestor][:prepended] || [], ancestor, type, level)
-            self.class.merge!(res, prepended_stats)
-          end
           # instance
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, type, level)
+          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :instance?, level)
           self.class.merge!(res, base_stats)
         end
         res
