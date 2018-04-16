@@ -1,7 +1,7 @@
 require 'test_case/base_module'
 
 module TestCase
-  class BaseExtended
+  class BaseExtendedClass
     extend BaseModule
   end
 end

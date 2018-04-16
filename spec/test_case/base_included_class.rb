@@ -1,7 +1,7 @@
 require 'test_case/base_module'
 
 module TestCase
-  class BaseIncluded
+  class BaseIncludedClass
     include BaseModule
   end
 end

@@ -1,7 +1,7 @@
 require 'test_case/base_module'
 
 module TestCase
-  class BasePrepended
+  class BasePrependedClass
     prepend BaseModule
   end
 end

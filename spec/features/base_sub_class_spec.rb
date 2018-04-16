@@ -1,9 +1,9 @@
 require 'hagma'
-require 'test_case/base_inherited'
+require 'test_case/base_sub_class'
 
-RSpec.describe TestCase::BaseInherited do
+RSpec.describe TestCase::BaseSubClass do
   # evaluate only once
-  let(:inherited_klass) { TestCase::BaseInherited }
+  let(:inherited_klass) { TestCase::BaseSubClass }
   let(:super_klass) { TestCase::SuperClass }
   let!(:method_evs) { Hagma::MethodInfo.method_collection }
   let(:method_suites) do

@@ -1,8 +1,8 @@
 require 'hagma'
-require 'test_case/base_prepended'
+require 'test_case/base_included_class'
 
-RSpec.describe TestCase::BasePrepended do
-  let(:owner) { TestCase::BasePrepended }
+RSpec.describe TestCase::BaseIncludedClass do
+  let(:owner) { TestCase::BaseIncludedClass }
   let!(:events) { Hagma::ModuleInfo.module_collection }
   let(:method_suites) do
     events[owner].map { |m| [m.mod, m.owner, m.hook] }
@@ -14,9 +14,9 @@ RSpec.describe TestCase::BasePrepended do
     end
   end
 
-  context 'when Module#prepended @ BaseExtend module' do
+  context 'when Module#included @ BaseIncludedClass module' do
     it 'belongs to ModuleInfo.module_collection' do
-      expect(method_suites).to include [TestCase::BaseModule, owner, :prepended]
+      expect(method_suites).to include [TestCase::BaseModule, owner, :included]
     end
   end
 end
