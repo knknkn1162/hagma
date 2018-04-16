@@ -17,9 +17,9 @@ RSpec.describe TestCase::ExtendedModule do
     let(:stats) { summary.klass_stats mod }
 
     it 'is true when singleton_method' do
-      #expect(stats[:singleton].keys).to eq %i[extended_singleton_method base_instance_method]
+      expect(stats[:singleton].keys).to eq %i[extended_singleton_method base_instance_method]
       expect(stats[:singleton][:base_instance_method]).to eq [base_instance_stat]
-      #expect(stats[:singleton][:extended_singleton_method]).to eq [extended_singleton_stat]
+      expect(stats[:singleton][:extended_singleton_method]).to eq [extended_singleton_stat]
     end
   end
 end
