@@ -1,10 +1,10 @@
 require 'hagma'
-require 'test_case/base_sub_class'
+require 'test_case/common_sub_class'
 
-RSpec.describe TestCase::BaseSubClass do
+RSpec.describe TestCase::CommonSubClass do
   # evaluate only once
-  let(:inherited_klass) { TestCase::BaseSubClass }
-  let(:super_klass) { TestCase::SuperClass }
+  let(:inherited_klass) { TestCase::CommonSubClass }
+  let(:super_klass) { TestCase::CommonSuperClass }
   let!(:method_evs) { Hagma::MethodInfo.method_collection }
   let(:method_suites) do
     method_evs[inherited_klass].map { |m| [m.owner, m.name, m.hook] }
