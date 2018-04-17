@@ -3,7 +3,12 @@ module Hagma
   class ModuleInfo
     class << self
       def module_collection
-        @module_collection ||= Hash.new { |h, k| h[k] = [] }
+        @module_collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [] } }
+      end
+
+      def chain owner
+        @chain ||= {}
+        @chain[owner] ||= module_collection[owner][:backward].reverse + [new(nil, owner, nil)] + module_collection[owner][:forward].reverse
       end
     end
     attr_reader :mod, :owner, :hook
@@ -16,7 +21,20 @@ module Hagma
     end
 
     def push
-      self.class.module_collection[owner] << self
+      self.class.module_collection[chain_owner][position] << self
+    end
+
+    def position
+      case hook
+      when :included, :extended then
+        :forward
+      when :prepended then
+        :backward
+      end
+    end
+
+    def chain_owner
+      hook == :extended ? owner.singleton_class : owner
     end
   end
 end
