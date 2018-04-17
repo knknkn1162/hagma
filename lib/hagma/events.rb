@@ -10,7 +10,7 @@ module Hagma
       def add_method_event(method, owner, hook)
         if hook.to_s.include?('singleton')
           singleton = owner.singleton_class
-          MethodInfo.new(method, singleton, hook.slice('singleton_')).push
+          MethodInfo.new(method, singleton, hook.to_s[10..-1].to_sym).push
           Singleton.desingleton[singleton] ||= owner
         else
           MethodInfo.new(method, owner, hook).push
