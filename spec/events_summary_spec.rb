@@ -44,11 +44,4 @@ RSpec.describe Hagma::Events::Summary do
   end
 
   let!(:klass) { Hagma::Events::Summary }
-  context 'when #module_functions' do
-    it 'is hash' do
-      res = klass.new(method_collection, module_collection).module_functions
-      expect(res.keys).to eq [mod]
-      expect(res[mod]).to eq [module_instance_method_info]
-    end
-  end
 end

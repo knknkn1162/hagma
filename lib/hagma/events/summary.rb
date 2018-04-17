@@ -44,90 +44,29 @@ module Hagma
       # @param klass [Class|Module] class or module
       # @param type [Symbol] :singleton or :instance or nil(all)
       # @return [Hash] hash keys are :instance or :singleton or both and its value is MethodStat
-      def klass_stats(klass, type = nil)
+      def type_stats(klass, type = nil)
         types = type.nil? ? %i[instance singleton] : type
         types.map do |t|
-          [t, __send__("#{t}_stats", klass)]
+          [t, stats(t == :singleton ? klass.singleton_class : klass)]
         end.to_h
       end
 
       # get the instance_method information including ancestors
       # @return [Hash] the form of {instance_method1: [MethodStat]}
-      def instance_stats(klass)
+      def stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         klass.ancestors.map.with_index(-offset(klass)) do |ancestor, level|
           # instance
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :instance?, level)
-          self.class.merge!(res, base_stats)
+          @method_collection[ancestor].map do |method_info|
+            res[method_info.name] << MethodStat.new(method_info, ancestor, level)
+          end
         end
         res
       end
 
-      # get the singleton_method information including ancestors
-      # @return [Hash] the form of {singleton_method1: [MethodStat]}
-      def singleton_stats(klass)
-        klass.class == Module ? module_singleton_stats(klass) : class_singleton_stats(klass)
-      end
-
-      # @return [Hash] the form of {singleton_method1: [MethodStat]}
-      def module_singleton_stats(klass)
-        res = Hash.new { |h, k| h[k] = [] }
-        res.update(get_method_stats(@method_collection[klass] || [], klass, :singleton?, 0))
-        # extended
-        extended_stats = get_module_stats(mixins[klass][:extended] || [], klass, :instance?, 0)
-        self.class.merge!(res, extended_stats)
-      end
-
-      # search index of klass in ancestors chain to support prepend keyword
       # @return [Integer]
       def offset(klass)
         klass.ancestors.index { |ancestor| ancestor == klass }
-      end
-
-      # @return [Hash] the form of {singleton_method1: [MethodStat]}
-      def class_singleton_stats(klass)
-        res = Hash.new { |h, k| h[k] = [] }
-        # trace singleton chain
-        klass.ancestors.map.with_index(-offset(klass)) do |ancestor, level|
-          next if ancestor.class == Module
-          # base
-          base_stats = get_method_stats(@method_collection[ancestor] || [], ancestor, :singleton?, level)
-          self.class.merge!(res, base_stats)
-          # extended
-          extended_stats = get_module_stats(mixins[ancestor][:extended] || [], ancestor, :instance?, level)
-          self.class.merge!(res, extended_stats)
-        end
-        # trace Class class and its ancestors
-        klass.singleton_class? ? self.class.merge(res, instance_stats(Class)) : res
-      end
-
-      # @return [Hash] form of { Class: List[MethodInfo] }
-      def module_functions
-        @module_functions ||= begin
-          res = Hash.new { |h, k| h[k] = [] }
-          @method_collection.each do |owner, mets|
-            next unless owner.class == Module
-            res[owner] = mets.select(&:instance?)
-          end
-          res
-        end
-      end
-
-      def get_module_stats(modules, klass, type, level)
-        res = Hash.new { |h, k| h[k] = [] }
-        modules.each do |module_info|
-          method_stats = get_method_stats(module_functions[module_info.mod] || [], klass, type, level)
-          self.class.merge!(res, method_stats)
-        end
-        res
-      end
-
-      def get_method_stats(methods, klass, type, level)
-        res = Hash.new { |h, k| h[k] = [] }
-        methods.select { |method_info| method_info.__send__(type) }.each do |method_info|
-          res[method_info.name] << MethodStat.new(method_info, klass, level)
-        end
-        res
       end
     end
   end
