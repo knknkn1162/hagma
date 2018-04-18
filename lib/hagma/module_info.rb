@@ -6,9 +6,25 @@ module Hagma
         @module_collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [] } }
       end
 
-      def chain owner
+      def chain(owner)
         @chain ||= {}
         @chain[owner] ||= module_collection[owner][:backward].reverse + [new(nil, owner, nil)] + module_collection[owner][:forward].reverse
+      end
+
+      def linked_ancestors(owner)
+        chain(owner).map do |ancestor_module_info|
+          if ancestor_module_info.target.nil?
+            ancestor_module_info
+          else
+            linked_ancestors ancestor_module_info.target
+          end
+        end
+      end
+
+      # @return [List[ModuleInfo]]
+      def ancestors(owner)
+        res = smart_ancestors(owner).flatten
+        res + res.last.owner.ancestors[1..-1].map { |klass| new(nil, klass, nil) }
       end
     end
     attr_reader :target, :owner, :hook
