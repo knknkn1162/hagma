@@ -21,10 +21,11 @@ module Hagma
         end
       end
 
-      # @return [List[ModuleInfo]]
+      # @return [List[ModuleInfo]] get ancestors which element is ModuleInfo. To get the normal ancestors, exec ModuleInfo.ancestors(owner).map(&:owner).
       def ancestors(owner)
+        @ancestors ||= {}
         res = smart_ancestors(owner).flatten
-        res + res.last.owner.ancestors[1..-1].map { |klass| new(nil, klass, nil) }
+        @ancestors[owner] ||= res + res.last.owner.ancestors[1..-1].map { |klass| new(nil, klass, nil) }
       end
     end
     attr_reader :target, :owner, :hook
