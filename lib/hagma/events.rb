@@ -21,8 +21,8 @@ module Hagma
         ModuleInfo.new(mod, owner, hook).push
       end
 
-      def add_class_event(subclass, owner, hook)
-        ModuleInfo.new(subclass, owner, hook).push
+      def add_class_event(super_class, owner, hook)
+        ModuleInfo.new(super_class, owner, hook).push
       end
     end
   end

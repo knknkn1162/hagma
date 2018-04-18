@@ -17,7 +17,7 @@ module Hagma
 
     def class_event(hook)
       define_method(hook) do |subclass|
-        Events.add_class_event(subclass, self, hook)
+        Events.add_class_event(self, subclass, hook)
       end
     end
   end
