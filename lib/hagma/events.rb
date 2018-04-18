@@ -20,6 +20,10 @@ module Hagma
       def add_module_event(mod, owner, hook)
         ModuleInfo.new(mod, owner, hook).push
       end
+
+      def add_class_event(subclass, owner, hook)
+        ModuleInfo.new(subclass, owner, hook).push
+      end
     end
   end
 end

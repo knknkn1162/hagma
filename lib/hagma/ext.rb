@@ -1,5 +1,5 @@
 # @author Kenta Nakajima
-# maybe use prepend than extend
+
 class Module
   extend Hagma::Hook
   method_event :method_added
@@ -10,10 +10,14 @@ class Module
   module_event :prepended
 end
 
-# maybe use prepend than extend
 class BasicObject
   extend ::Hagma::Hook
   method_event :singleton_method_added
   method_event :singleton_method_removed
   method_event :singleton_method_undefined
+end
+
+class Class
+  extend Hagma::Hook
+  class_event :inherited
 end

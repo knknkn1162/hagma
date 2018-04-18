@@ -14,5 +14,11 @@ module Hagma
         Events.add_module_event(self, owner, hook)
       end
     end
+
+    def class_event(hook)
+      define_method(hook) do |subclass|
+        Events.add_class_event(subclass, self, hook)
+      end
+    end
   end
 end

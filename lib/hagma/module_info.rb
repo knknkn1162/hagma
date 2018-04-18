@@ -26,7 +26,7 @@ module Hagma
 
     def position
       case hook
-      when :included, :extended then
+      when :included, :extended, :inherited then
         :forward
       when :prepended then
         :backward
