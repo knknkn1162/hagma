@@ -11,10 +11,10 @@ module Hagma
         @chain[owner] ||= module_collection[owner][:backward].reverse + [new(nil, owner, nil)] + module_collection[owner][:forward].reverse
       end
     end
-    attr_reader :mod, :owner, :hook
+    attr_reader :target, :owner, :hook
     BACKTRACE_METHOD_NUMBER = 5
-    def initialize(mod, owner, hook, backtrace = true)
-      @mod = mod
+    def initialize(target, owner, hook, backtrace = true)
+      @target = target
       @owner = owner
       @hook = hook
       @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
