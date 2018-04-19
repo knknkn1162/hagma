@@ -22,7 +22,11 @@ module Hagma
       end
 
       def add_class_event(super_class, owner, hook)
-        ModuleInfo.new(super_class, owner, hook).push
+        3.times do
+          ModuleInfo.new(super_class, owner, hook).push
+          super_class = super_class.singleton_class
+          owner = owner.singleton_class
+        end
       end
     end
   end
