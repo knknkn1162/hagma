@@ -29,7 +29,6 @@ module Hagma
       def ancestors(owner)
         @ancestors ||= {}
         res = linked_ancestors(owner).flatten
-        p res.last
         @ancestors[owner] ||= res + res.last.target.ancestors[1..-1].map { |klass| new(klass, nil, nil) }
       end
 
