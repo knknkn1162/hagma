@@ -8,7 +8,7 @@ module Hagma
 
       def chain(owner)
         @chain ||= {}
-        @chain[owner] ||= module_collection[owner][:backward].reverse + [new(nil, owner, nil, false)] + module_collection[owner][:forward].reverse
+        @chain[owner] ||= module_collection[owner][:backward].reverse + [dummy] + module_collection[owner][:forward].reverse
       end
 
       def _linked_ancestors(target_info)
@@ -22,7 +22,7 @@ module Hagma
       end
 
       def linked_ancestors(owner)
-        _linked_ancestors(new(owner, nil, nil, false))
+        _linked_ancestors(root(owner))
       end
 
       # @return [List[ModuleInfo]] get ancestors which element is ModuleInfo. To get the normal ancestors, exec ModuleInfo.ancestors(owner).map(&:owner).
@@ -31,6 +31,14 @@ module Hagma
         res = linked_ancestors(owner).flatten
         p res.last
         @ancestors[owner] ||= res + res.last.target.ancestors[1..-1].map { |klass| new(klass, nil, nil) }
+      end
+
+      def root(owner)
+        new(owner, nil, nil, false)
+      end
+
+      def dummy
+        @dummy ||= new(nil, nil, nil, false)
       end
     end
     attr_reader :target, :owner, :hook
