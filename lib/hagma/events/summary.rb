@@ -70,16 +70,25 @@ module Hagma
       # @param klass [Class|Module] class or module
       # @param type [Symbol] :singleton or :instance or nil(all)
       # @return [Hash] hash keys are :instance or :singleton or both and its value is MethodStat
-      def search_methods(klass, type = nil)
+      def lookup_methods(klass, type = nil)
         types = type.nil? ? %i[instance singleton] : type
         types.map do |t|
           [t, method_stats(t == :singleton ? klass.singleton_class : klass)]
         end.to_h
       end
 
+      # search method_info objects from the method name
+      # @param met [Symbol|String] method name
+      # @return [Hash] hash which key are class and value is method_info.
+      def lookup_classes(met)
+        @method_collection.map { |_, v| v }.flatten.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
+          [method_info.owner, method_info]
+        end.to_h
+      end
+
       # get the instance_method information including ancestors
       # @return [Hash] the form of {instance_method1: [MethodStat]}
-      def stats(klass)
+      def method_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
         ancestors(klass).map.with_index(-offset(klass)) do |module_info, level|
           # instance
