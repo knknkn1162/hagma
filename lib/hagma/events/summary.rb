@@ -67,17 +67,6 @@ module Hagma
         @module_collection = module_collection
       end
 
-      # @return [Hash] {owner1: {extended: [module_info], ...}, owner2: {...} }
-      def mixins
-        @mixins ||= begin
-          hash = Hash.new { |h, k| h[k] = {} }
-          @module_collection.each do |owner, module_info|
-            hash[owner] = module_info.group_by(&:hook)
-          end
-          hash
-        end
-      end
-
       # search method_info objects from the class
       # @param klass [Class|Module] class or module
       # @param type [Symbol] :singleton or :instance or nil(all)
