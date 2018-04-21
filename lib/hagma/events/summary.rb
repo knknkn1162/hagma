@@ -1,4 +1,5 @@
 require 'hagma/module_info/collection'
+require 'hagma/method_info/collection'
 
 module Hagma
   module Events
@@ -24,18 +25,14 @@ module Hagma
         end
       end
 
-      def method_info_list
-        @method_info_list ||= @method_collection.map { |_, mets| mets }.flatten
-      end
-
       def find_module_info(method_info)
-        @module_collection.filter_with_target(method_info.owner).find { |module_info| @method_collection[module_info.target].include?(method_info) }
+        @module_collection.filter_with_target(method_info.owner).find { |module_info| @method_collection.owner_methods(module_info.target).include?(method_info) }
       end
 
       # @param method_collection [list[MethodInfo]]
       # @param module_collection [list[ModuleInfo]]
       def initialize(method_collection, module_collection)
-        @method_collection = method_collection
+        @method_collection = MethodInfo::Collection.new(method_collection)
         @module_collection = ModuleInfo::Collection.new(module_collection)
       end
 
@@ -56,7 +53,7 @@ module Hagma
       def lookup_classes(met)
         new_klasses = @module_collection.keys
         res = Hash.new { |h, k| h[k] = [] }
-        method_info_list.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
+        @method_collection.list.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
           m_owner = method_info.owner
           # add method_info myself to res
           res[m_owner] << MethodStat.new(method_info, ModuleInfo.root(m_owner), 0)
