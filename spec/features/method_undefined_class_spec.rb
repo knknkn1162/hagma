@@ -1,7 +1,7 @@
 require 'hagma'
 require 'test_case/method_undefined_class'
 
-RSpec.describe TestCase::MethodRemovedClass do
+RSpec.describe TestCase::MethodUndefinedClass do
   let(:klass) { TestCase::MethodUndefinedClass }
   let(:singleton) { klass.singleton_class }
   let!(:method_evs) { Hagma::MethodInfo.method_collection }
