@@ -103,11 +103,6 @@ module Hagma
         end
         res
       end
-
-      # @return [Integer]
-      def offset(klass)
-        klass.ancestors.index { |ancestor| ancestor == klass }
-      end
     end
   end
 end
