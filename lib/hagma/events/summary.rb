@@ -29,7 +29,7 @@ module Hagma
       end
 
       def find_module_info(method_info)
-        @module_collection.module_info_list.select { |module_info| module_info.target == method_info.owner }.find { |module_info| @method_collection[module_info.target].include?(method_info) }
+        @module_collection.filter_with_target(method_info.owner).find { |module_info| @method_collection[module_info.target].include?(method_info) }
       end
 
       # @param method_collection [list[MethodInfo]]
