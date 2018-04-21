@@ -66,14 +66,14 @@ module Hagma
         end
       end
 
-      # The result includes klass's ancestors different from #klass_stat
+      # search method_info objects from the class
       # @param klass [Class|Module] class or module
       # @param type [Symbol] :singleton or :instance or nil(all)
       # @return [Hash] hash keys are :instance or :singleton or both and its value is MethodStat
-      def type_stats(klass, type = nil)
+      def search_methods(klass, type = nil)
         types = type.nil? ? %i[instance singleton] : type
         types.map do |t|
-          [t, stats(t == :singleton ? klass.singleton_class : klass)]
+          [t, method_stats(t == :singleton ? klass.singleton_class : klass)]
         end.to_h
       end
 
