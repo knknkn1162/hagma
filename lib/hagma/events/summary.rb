@@ -2,12 +2,6 @@ module Hagma
   module Events
     # the module summaries module_collection & method_collection
     class Summary
-      # @param owner [Symbol]
-      # @param base [list[MethodInfo]]
-      # @param included [list[MethodInfo]]
-      # @param excluded [list[MethodInfo]]
-      # @param prepended [list[MethodInfo]]
-      OwnerMethods = Struct.new(:owner, :base, :included, :extended, :prepended)
       # @param method_info [MethodInfo]
       # @param owner ModuleInfo The ancestor that the method has.
       # @param level Integer
