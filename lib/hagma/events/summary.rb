@@ -32,6 +32,14 @@ module Hagma
         @chain[owner] ||= @module_collection[owner][:backward].reverse + [ModuleInfo.dummy] + @module_collection[owner][:forward].reverse
       end
 
+      def module_info_list
+        @module_info_list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
+      end
+
+      def method_info_list
+        @method_info_list ||= @method_collection.map { |_, mets| mets }.flatten
+      end
+
       def _linked_ancestors(target_info)
         chain(target_info.target).map do |ancestor_module_info|
           if ancestor_module_info.target.nil?
@@ -86,16 +94,25 @@ module Hagma
       # @param met [Symbol|String] method name
       # @return [Hash] hash which key are class and value is method_info.
       def lookup_classes(met)
-        @method_collection.map { |_, v| v }.flatten.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
-          [method_info.owner, method_info]
-        end.to_h
+        new_klasses = @module_collection.keys
+        res = Hash.new { |h, k| h[k] = [] }
+        method_info_list.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
+          owner_info_list = module_info_list.select { |module_info| module_info.target == method_info.owner }
+          new_klasses.each do |klass|
+            if (idx = klass.ancestors.index(method_info.owner))
+              module_info = owner_info_list.find { |info| info.owner == klass } || ModuleInfo.root(klass)
+              res[klass] << MethodStat.new(method_info, module_info, idx - self.class.offset(klass))
+            end
+          end
+        end
+        res
       end
 
       # get the instance_method information including ancestors
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def method_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
-        ancestors(klass).map.with_index(-offset(klass)) do |module_info, level|
+        ancestors(klass).map.with_index(-self.class.offset(klass)) do |module_info, level|
           # instance
           @method_collection[module_info.target].map do |method_info|
             res[method_info.name] << MethodStat.new(method_info, module_info, level)
