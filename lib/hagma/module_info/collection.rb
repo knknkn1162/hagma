@@ -19,11 +19,11 @@ module Hagma
       end
 
       def filter_with_target(owner)
-        module_info_list.select { |module_info| module_info.target == owner }
+        list.select { |module_info| module_info.target == owner }
       end
 
-      def module_info_list
-        @module_info_list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
+      def list
+        @list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
       end
 
       def linked_ancestors(owner)
