@@ -13,6 +13,7 @@ module Hagma
       # @param level Integer
       MethodStat = Struct.new(:method_info, :owner, :level)
 
+      class ModuleNotFoundError < StandardError; end
       class << self
         def merge!(src, dst)
           dst.keys.each do |method_name|
@@ -34,6 +35,10 @@ module Hagma
 
       def module_info_list
         @module_info_list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
+      end
+
+      def find_module_info(method_info)
+        module_info_list.select { |module_info| module_info.target == method_info.owner }.find { |module_info| @method_collection[module_info.target].include?(method_info) }
       end
 
       def method_info_list
