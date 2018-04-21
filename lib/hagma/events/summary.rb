@@ -1,3 +1,5 @@
+require 'hagma/module_info/collection'
+
 module Hagma
   module Events
     # the module summaries module_collection & method_collection
@@ -22,49 +24,19 @@ module Hagma
         end
       end
 
-      def chain(owner)
-        @chain ||= {}
-        @chain[owner] ||= @module_collection[owner][:backward].reverse + [ModuleInfo.dummy] + @module_collection[owner][:forward].reverse
-      end
-
-      def module_info_list
-        @module_info_list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
-      end
-
-      def find_module_info(method_info)
-        module_info_list.select { |module_info| module_info.target == method_info.owner }.find { |module_info| @method_collection[module_info.target].include?(method_info) }
-      end
-
       def method_info_list
         @method_info_list ||= @method_collection.map { |_, mets| mets }.flatten
       end
 
-      def _linked_ancestors(target_info)
-        chain(target_info.target).map do |ancestor_module_info|
-          if ancestor_module_info.target.nil?
-            target_info
-          else
-            _linked_ancestors ancestor_module_info
-          end
-        end
-      end
-
-      def linked_ancestors(owner)
-        _linked_ancestors(ModuleInfo.root(owner))
-      end
-
-      # @return [List[ModuleInfo]] get ancestors which element is ModuleInfo. To get the normal ancestors, exec ModuleInfo.ancestors(owner).map(&:owner).
-      def ancestors(owner)
-        @ancestors ||= {}
-        res = linked_ancestors(owner).flatten
-        @ancestors[owner] ||= res + res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.new(klass, nil, nil) }
+      def find_module_info(method_info)
+        @module_collection.module_info_list.select { |module_info| module_info.target == method_info.owner }.find { |module_info| @method_collection[module_info.target].include?(method_info) }
       end
 
       # @param method_collection [list[MethodInfo]]
       # @param module_collection [list[ModuleInfo]]
       def initialize(method_collection, module_collection)
         @method_collection = method_collection
-        @module_collection = module_collection
+        @module_collection = ModuleInfo::Collection.new(module_collection)
       end
 
       # search method_info objects from the class
@@ -92,8 +64,7 @@ module Hagma
           owner_module_info = find_module_info(method_info)
           new_klasses.each do |klass|
             next if klass == method_info.owner
-            klass_ancestors = klass.ancestors
-            if (idx = klass_ancestors.index(method_info.owner))
+            if (idx = klass.ancestors.index(method_info.owner))
               raise ModuleNotFoundError if owner_module_info.nil?
               res[klass] << MethodStat.new(method_info, owner_module_info, idx - self.class.offset(klass))
             end
@@ -106,7 +77,7 @@ module Hagma
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def method_stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
-        ancestors(klass).map.with_index(-self.class.offset(klass)) do |module_info, level|
+        @module_collection.ancestors(klass).map.with_index(-self.class.offset(klass)) do |module_info, level|
           # instance
           @method_collection[module_info.target].map do |method_info|
             res[method_info.name] << MethodStat.new(method_info, module_info, level)
