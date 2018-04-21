@@ -81,10 +81,10 @@ module Hagma
       # @return [Hash] the form of {instance_method1: [MethodStat]}
       def stats(klass)
         res = Hash.new { |h, k| h[k] = [] }
-        klass.ancestors.map.with_index(-offset(klass)) do |ancestor, level|
+        ancestors(klass).map.with_index(-offset(klass)) do |module_info, level|
           # instance
-          @method_collection[ancestor].map do |method_info|
-            res[method_info.name] << MethodStat.new(method_info, ancestor, level)
+          @method_collection[module_info.target].map do |method_info|
+            res[method_info.name] << MethodStat.new(method_info, module_info, level)
           end
         end
         res
