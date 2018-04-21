@@ -20,6 +20,11 @@ module Hagma
           end
           src
         end
+
+        # @return [Integer]
+        def offset(klass)
+          klass.ancestors.index { |ancestor| ancestor == klass }
+        end
       end
 
       def chain(owner)
