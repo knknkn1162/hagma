@@ -97,7 +97,12 @@ module Hagma
         new_klasses = @module_collection.keys
         res = Hash.new { |h, k| h[k] = [] }
         method_info_list.select { |method_info| method_info.name == met.to_sym }.map do |method_info|
-          owner_info_list = module_info_list.select { |module_info| module_info.target == method_info.owner }
+          m_owner = method_info.owner
+          if m_owner.class == Module && !new_klasses.include?(m_owner)
+            res[m_owner] << MethodStat.new(method_info, ModuleInfo.root(m_owner), 0)
+            next
+          end
+          owner_info_list = module_info_list.select { |module_info| module_info.target == m_owner }
           new_klasses.each do |klass|
             if (idx = klass.ancestors.index(method_info.owner))
               module_info = owner_info_list.find { |info| info.owner == klass } || ModuleInfo.root(klass)
