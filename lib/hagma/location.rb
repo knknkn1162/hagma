@@ -3,7 +3,7 @@ require 'hagma/extractor'
 module Hagma
   # generalized class in Thread::Backtrace::Location & return value of (Method|UnboundMethod)#source_location
   class Location
-    attr_reader :label, :base_label
+    attr_reader :label, :base_label, :extractor
 
     def initialize(**args)
       @base_label = args[:base_label]

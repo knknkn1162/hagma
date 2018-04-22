@@ -5,12 +5,9 @@ module Hagma
     attr_reader :absolute_path, :lineno
 
     class << self
-      def path_lines
-        @path_lines ||= Hash.new { |h, k| h[k] = [] }
-      end
-
       def full_lines(path)
-        path_lines[path] ||= File.read(path).split("\n")
+        @path_lines ||= Hash.new
+        @path_lines[path] ||= File.read(path).split("\n")
       end
 
       # Format the extracted lines by default. You can customize the fomatter in initialization.

@@ -14,7 +14,7 @@ module Hagma
         @dummy ||= new(nil, nil, nil, false)
       end
     end
-    attr_reader :target, :owner, :hook
+    attr_reader :target, :owner, :hook, :backtrace_locations
     BACKTRACE_METHOD_NUMBER = 5
     def initialize(target, owner, hook, backtrace = true)
       @target = target

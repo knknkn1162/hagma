@@ -49,7 +49,7 @@ module Hagma
 
       # search method_info objects from the method name
       # @param met [Symbol|String] method name
-      # @return [Hash] hash which key are class and value is method_info.
+      # @return [Hash] hash which key are class and value is MethodStat
       def lookup_classes(met)
         new_klasses = @module_collection.keys
         res = Hash.new { |h, k| h[k] = [] }
