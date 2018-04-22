@@ -28,15 +28,19 @@ RSpec.describe Hagma::Extractor do
   end
 
   context 'when #to_s' do
-    context 'when file is not found' do
+    context 'when invalid formatter' do
+      let(:absolute_path) { __FILE__ }
+      let(:lineno) { __LINE__ + 3 } # the line, `raise IOError`
       let(:extractor) do
         Hagma::Extractor.new(absolute_path, lineno) do
           raise IOError
         end
       end
+      subject { extractor.to_s }
 
       it 'returns the string type of exception' do
-        expect(extractor.to_s).to start_with 'IOError'
+        is_expected.to start_with 'IOError'
+        is_expected.to include "#{absolute_path}:#{lineno}"
       end
     end
   end

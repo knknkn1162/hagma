@@ -15,7 +15,7 @@ module Hagma
         lastno = lines.keys.max
         lines.map do |num, line|
           sign = num == cur_no ? '=> ' : ' ' * 3
-          format('%s%*d: %s', sign, lastno.to_s.size, num, line)
+          super('%s%*d: %s', sign, lastno.to_s.size, num, line)
         end.join("\n")
       end
     end
