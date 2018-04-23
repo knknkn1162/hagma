@@ -11,10 +11,10 @@ module Hagma
     end
 
     def collect_methods
-      res = []
+      res ||= Hash.new { |h, k| h[k] = [] }
       [const, const.singleton_class].map do |cst|
         cst.instance_methods(false).map do |met|
-          res << MethodInfo.new(met, cst, :core, false)
+          res[cst] << MethodInfo.new(met, cst, :core, false)
         end
       end
       res

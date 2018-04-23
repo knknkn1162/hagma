@@ -29,11 +29,12 @@ module Hagma
         if kls.class.ancestors.include?(Module)
           class_modules << ConstInfo.new(symbol, kls, klass, level)
           cache << kls
-          enumerate(kls, level + 1)
+          _enumerate(kls, level + 1)
         else
           consts << ConstInfo.new(symbol, kls, klass, level)
         end
       end
+      self
     end
   end
 end
