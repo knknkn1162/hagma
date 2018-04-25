@@ -42,7 +42,7 @@ module Hagma
       def _linked_ancestors(module_info)
         chain(module_info.target).map do |ancestor_module_info|
           if ancestor_module_info.target.nil?
-            target_info
+            module_info
           else
             _linked_ancestors ancestor_module_info
           end

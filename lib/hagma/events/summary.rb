@@ -76,7 +76,7 @@ module Hagma
         res = Hash.new { |h, k| h[k] = [] }
         @module_collection.ancestors(klass).map.with_index(-self.class.offset(klass)) do |module_info, level|
           # instance
-          @method_collection[module_info.target].map do |method_info|
+          @method_collection.owner_methods(module_info.target).map do |method_info|
             res[method_info.name] << MethodStat.new(method_info, module_info, level)
           end
         end
