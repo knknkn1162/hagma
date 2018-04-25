@@ -14,8 +14,8 @@ module Hagma
       def format(lines, cur_no)
         lastno = lines.keys.max
         lines.map do |num, line|
-          sign = num == cur_no ? '=> ' : ' ' * 3
-          super('%s%*d: %s', sign, lastno.to_s.size, num, line)
+          sign = num + 1 == cur_no ? '=> ' : ' ' * 3
+          super('%s%*d: %s', sign, lastno.to_s.size, num + 1, line)
         end.join("\n")
       end
     end
@@ -46,8 +46,8 @@ module Hagma
     private
 
     def extract_lines(lines, size)
-      startno = [lineno - size, 0].max
-      lines[startno..(lineno + size)].map.with_index(startno) { |line, idx| [idx, line] }.to_h
+      startno = [lineno - 1 - size, 0].max
+      lines[startno..(lineno - 1 + size)].map.with_index(startno) { |line, idx| [idx, line] }.to_h
     end
   end
 end

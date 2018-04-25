@@ -8,6 +8,7 @@ module Hagma
     def initialize(**args)
       @base_label = args[:base_label]
       @label = args[:label]
+      # lineno starts with 1
       @extractor = Extractor.new(args[:absolute_path], args[:lineno]) if args[:absolute_path]
     end
 
