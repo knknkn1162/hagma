@@ -38,7 +38,7 @@ module Hagma
       end
     end
 
-    # @return [Hash] hash from lineno to String
+    # @return [Hash] hash from lineno to String. Note that lineno starts with zero.
     def lines(size = WINDOW_SIZE)
       @lines ||= extract_lines self.class.full_lines(absolute_path), size
     end
