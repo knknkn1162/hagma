@@ -34,8 +34,15 @@ module Hagma
       def ancestors(owner)
         @ancestors ||= {}
         res = linked_ancestors(owner).flatten
+        suffix =
+          if owner.singleton_class? && owner.superclass == Module
+            Module.ancestors.map { |klass| ModuleInfo.root(klass) }
+          else
+            res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.root(klass) }
+          end
+
         # TODO: make sure that lookup logic is correct
-        @ancestors[owner] ||= refinement_modules(owner) + res + res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.new(klass, nil, nil) }
+        @ancestors[owner] ||= refinement_modules(owner) + res + suffix
       end
 
       def refinement_modules(owner)
