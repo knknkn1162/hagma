@@ -2,8 +2,8 @@ module Hagma
   # store information on the designated module
   class ModuleInfo
     class << self
-      def module_collection
-        @module_collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
+      def collection
+        @collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
       end
 
       def root(owner)
@@ -24,7 +24,7 @@ module Hagma
     end
 
     def push
-      self.class.module_collection[chain_owner][position] << self
+      self.class.collection[chain_owner][position] << self
     end
 
     def position

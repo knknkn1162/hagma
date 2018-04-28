@@ -4,7 +4,7 @@ require 'hagma/events/method_stat'
 
 module Hagma
   module Events
-    # the module summaries module_collection & method_collection
+    # the module summaries collection & method_collection
     class Summary
       class ModuleNotFoundError < StandardError; end
       class << self

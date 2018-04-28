@@ -36,7 +36,7 @@ RSpec.describe Hagma::Events::Summary do
     }
   end
 
-  let(:module_collection) do
+  let(:collection) do
     {
       owner => [included_module1_info, extended_module1_info, prepended_module1_info],
       other_owner => [included_module2_info, extended_module2_info, prepended_module2_info]

@@ -4,7 +4,7 @@ require 'test_case/base_refine_module'
 RSpec.describe TestCase::BaseRefinementModule do
   # evaluate only once
   let!(:method_evs) { Hagma::MethodInfo.method_collection }
-  let!(:module_evs) { Hagma::ModuleInfo.module_collection[owner][:leftmost] }
+  let!(:module_evs) { Hagma::ModuleInfo.collection[owner][:leftmost] }
   let!(:refinement_module_info) do
     module_evs.find { |module_info| module_info.hook == :refined }
   end

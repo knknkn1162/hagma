@@ -4,18 +4,18 @@ module Hagma
   # store information on the designated module
   class ModuleInfo
     class Collection
-      # @param module_collection
-      def initialize(module_collection)
-        @module_collection = module_collection
+      # @param collection
+      def initialize(collection)
+        @collection = collection
       end
 
       def keys
-        @module_collection.keys
+        @collection.keys
       end
 
       def chain(owner)
         @chain ||= {}
-        @chain[owner] ||= @module_collection[owner][:backward].reverse + [ModuleInfo.dummy] + @module_collection[owner][:forward].reverse
+        @chain[owner] ||= @collection[owner][:backward].reverse + [ModuleInfo.dummy] + @collection[owner][:forward].reverse
       end
 
       def filter_with_target(owner)
@@ -23,7 +23,7 @@ module Hagma
       end
 
       def list
-        @list ||= @module_collection.map { |_, modules| modules.values.flatten }.flatten
+        @list ||= @collection.map { |_, modules| modules.values.flatten }.flatten
       end
 
       def linked_ancestors(owner)
@@ -46,7 +46,7 @@ module Hagma
       end
 
       def refinement_modules(owner)
-        @module_collection[owner][:leftmost]
+        @collection[owner][:leftmost]
       end
 
       private

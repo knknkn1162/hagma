@@ -4,9 +4,9 @@ module Hagma
   # store information on the designated module
   class MethodInfo
     class Collection
-      # @param module_collection
-      def initialize(module_collection)
-        @method_collection = module_collection
+      # @param collection
+      def initialize(collection)
+        @method_collection = collection
       end
 
       def list
