@@ -24,7 +24,7 @@ module Hagma
       @name = mth
       @owner = owner
       @hook = hook
-      @access_controller = access_controller.nil? ? get_access_controller : access_controller
+      @access_controller = access_controller.nil? ? _access_controller : access_controller
       @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
     end
 
@@ -48,7 +48,7 @@ module Hagma
 
     private
 
-    def get_access_controller
+    def _access_controller
       %i[public protected private].find do |controller|
         owner.send("#{controller}_method_defined?", name)
       end
