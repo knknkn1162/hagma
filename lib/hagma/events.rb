@@ -10,6 +10,8 @@ module Hagma
       def add_method_event(method, owner, hook)
         if hook.to_s.include?('singleton')
           singleton = owner.singleton_class
+          # hook is the form of (singleton_)?_method_(added|removed|undefined)
+          # the number 10 is the the number of characters, `singleton_`.
           MethodInfo.new(method, singleton, hook.to_s[10..-1].to_sym).push
           Singleton.desingleton[singleton] ||= owner
         else
