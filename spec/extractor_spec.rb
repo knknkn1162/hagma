@@ -1,16 +1,16 @@
 require 'hagma/extractor'
 
 RSpec.describe Hagma::Extractor do
-  let(:absolute_path) { 'dummy.rb' }
-  let(:script) do
-    (1..10).map(&:to_s)
-  end
-  let(:lineno) { 5 }
-  let(:extractor) { Hagma::Extractor.new(absolute_path, lineno) }
-
   describe '#extract_lines' do
     let(:size) { 4 }
-    subject { extractor.__send__(:extract_lines, script, size) }
+    let(:absolute_path) { 'dummy.rb' }
+    let(:extractor) { Hagma::Extractor.new(absolute_path, lineno) }
+
+    subject do
+      script = (1..10).map(&:to_s)
+      extractor.__send__(:extract_lines, script, size)
+    end
+
     context 'when #extract_lines and the window size is 4' do
       context 'when current line number is 2' do
         let(:lineno) { 2 }
