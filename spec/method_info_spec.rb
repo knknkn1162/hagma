@@ -3,7 +3,7 @@ require 'test_case/base_class'
 
 RSpec.describe Hagma::MethodInfo do
   describe 'when test_case/base_class' do
-    let(:method_info) { Hagma::MethodInfo.new(met, owner, hook, false) }
+    let(:method_info) { Hagma::MethodInfo.new(met, owner, hook, backtrace: false) }
 
     # default
     let(:met) { :base_instance_method }

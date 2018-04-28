@@ -12,9 +12,11 @@ module Hagma
 
     def collect_methods
       res ||= Hash.new { |h, k| h[k] = [] }
-      [const, const.singleton_class].map do |cst|
-        cst.instance_methods(false).map do |met|
-          res[cst] << MethodInfo.new(met, cst, :core, false)
+      [const, const.singleton_class].each do |cst|
+        %i[public protected private].each do |controller|
+          cst.__send__("#{controller}_instance_methods", false).map do |met|
+            res[cst] << MethodInfo.new(met, cst, :core, access_controller: controller, backtrace: false)
+          end
         end
       end
       res

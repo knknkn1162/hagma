@@ -20,11 +20,11 @@ module Hagma
     name? :singleton
     name? :instance
 
-    def initialize(mth, owner, hook, backtrace = true)
+    def initialize(mth, owner, hook, access_controller = nil, backtrace = true)
       @name = mth
       @owner = owner
       @hook = hook
-      @access_controller = access_controller
+      @access_controller = access_controller.nil? ? get_access_controller : access_controller
       @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
     end
 
@@ -59,7 +59,7 @@ module Hagma
 
     private
 
-    def access_controller
+    def get_access_controller
       %i[public protected private].find do |controller|
         owner.send("#{controller}_method_defined?", name)
       end
