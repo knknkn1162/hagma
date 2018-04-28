@@ -8,15 +8,16 @@ module Hagma
     autoload :Summary, 'hagma/events/summary'
     class << self
       def add_method_event(method, owner, hook)
-        if hook.to_s.include?('singleton')
-          singleton = owner.singleton_class
-          # hook is the form of (singleton_)?_method_(added|removed|undefined)
-          # the number 10 is the the number of characters, `singleton_`.
-          MethodInfo.new(method, singleton, hook.to_s[10..-1].to_sym).push
-          Singleton.desingleton[singleton] ||= owner
-        else
-          MethodInfo.new(method, owner, hook).push
-        end
+        owner, hook =
+          if hook.to_s.include?('singleton')
+            # Singleton.desingleton[singleton] ||= owner
+            # hook is the form of (singleton_)?_method_(added|removed|undefined)
+            # the number 10 is the the number of characters, `singleton_`.
+            [owner.singleton_class, hook.to_s[10..-1].to_sym]
+          else
+            [owner, hook]
+          end
+        MethodInfo.new(method, owner, hook).push
       end
 
       def add_module_event(mod, owner, hook)
