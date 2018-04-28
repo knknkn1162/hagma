@@ -1,15 +1,11 @@
 require 'hagma/module_info/collection'
 require 'hagma/method_info/collection'
+require 'hagma/events/method_stat'
 
 module Hagma
   module Events
     # the module summaries module_collection & method_collection
     class Summary
-      # @param method_info [MethodInfo]
-      # @param owner ModuleInfo The ancestor that the method has.
-      # @param level Integer
-      MethodStat = Struct.new(:method_info, :owner, :level)
-
       class ModuleNotFoundError < StandardError; end
       class << self
         def merge!(src, dst)
