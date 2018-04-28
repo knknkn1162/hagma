@@ -4,7 +4,7 @@ require 'hagma/backtrace/location'
 module Hagma
   # store information on the designated method and you can analyze it.
   class MethodInfo
-    attr_reader :name, :owner, :hook, :backtrace_locations
+    attr_reader :name, :owner, :access_controller, :hook, :backtrace_locations
     BACKTRACE_METHOD_NUMBER = 5
     class << self
       def name?(name)
@@ -20,10 +20,11 @@ module Hagma
     name? :singleton
     name? :instance
 
-    def initialize(mth, owner, hook, backtrace = true)
+    def initialize(mth, owner, access_controller, hook, backtrace = true)
       @name = mth
       @owner = owner
       @hook = hook
+      @access_controller = access_controller
       @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
     end
 
