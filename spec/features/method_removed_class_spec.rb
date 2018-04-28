@@ -4,7 +4,7 @@ require 'test_case/method_removed_class'
 RSpec.describe TestCase::MethodRemovedClass do
   let(:klass) { TestCase::MethodRemovedClass }
   let(:singleton) { klass.singleton_class }
-  let!(:method_evs) { Hagma::MethodInfo.method_collection }
+  let!(:method_evs) { Hagma::MethodInfo.collection }
   let(:method_suites) do
     method_evs[kls].map { |m| [m.name, m.owner, m.hook] }
   end

@@ -5,7 +5,7 @@ RSpec.describe TestCase::BaseClass do
   # evaluate only once
   let(:klass) { TestCase::BaseClass }
   let(:singleton) { klass.singleton_class }
-  let!(:method_evs) { Hagma::MethodInfo.method_collection }
+  let!(:method_evs) { Hagma::MethodInfo.collection }
   let(:method_suites) { [method_info.owner, method_info.name, method_info.hook] }
 
   context 'when array size of method_suites' do

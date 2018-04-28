@@ -6,15 +6,15 @@ module Hagma
     class Collection
       # @param collection
       def initialize(collection)
-        @method_collection = collection
+        @collection = collection
       end
 
       def list
-        @list ||= @method_collection.map { |_, mets| mets }.flatten
+        @list ||= @collection.map { |_, mets| mets }.flatten
       end
 
       def owner_methods(target)
-        @method_collection[target]
+        @collection[target]
       end
     end
   end

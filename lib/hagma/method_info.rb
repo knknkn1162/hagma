@@ -13,8 +13,8 @@ module Hagma
         end
       end
 
-      def method_collection
-        @method_collection ||= Hash.new { |h, k| h[k] = [] }
+      def collection
+        @collection ||= Hash.new { |h, k| h[k] = [] }
       end
     end
     name? :singleton
@@ -54,7 +54,7 @@ module Hagma
     end
 
     def push
-      self.class.method_collection[owner] << self
+      self.class.collection[owner] << self
     end
 
     private
