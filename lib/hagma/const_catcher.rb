@@ -1,6 +1,7 @@
 require 'hagma/const_info'
 
 module Hagma
+  # Class for collecting constants
   class ConstCatcher
     def cache
       @cache ||= []
@@ -22,6 +23,9 @@ module Hagma
       _enumerate(@klass, 0)
     end
 
+    # enumerate constants recursively
+    # @param klass [Class|Module]
+    # @return ConstCatcher return self
     def _enumerate(klass, level = 0)
       klass.constants(false).map do |symbol|
         kls = klass.const_get(symbol)
