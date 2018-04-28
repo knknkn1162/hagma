@@ -3,7 +3,7 @@ module Hagma
   class ModuleInfo
     class << self
       def module_collection
-        @module_collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [] } }
+        @module_collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
       end
 
       def root(owner)
@@ -33,6 +33,8 @@ module Hagma
         :forward
       when :prepended then
         :backward
+      when :refined then
+        :leftmost
       end
     end
 

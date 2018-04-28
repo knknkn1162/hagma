@@ -23,7 +23,7 @@ module Hagma
       end
 
       def list
-        @list ||= @module_collection.map { |_, modules| modules[:backward] + modules[:forward] }.flatten
+        @list ||= @module_collection.map { |_, modules| modules.values.flatten }.flatten
       end
 
       def linked_ancestors(owner)
