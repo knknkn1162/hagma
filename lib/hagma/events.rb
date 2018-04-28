@@ -1,6 +1,5 @@
 require 'hagma/method_info'
 require 'hagma/module_info'
-require 'hagma/singleton'
 
 module Hagma
   # Add method or module event and stores
