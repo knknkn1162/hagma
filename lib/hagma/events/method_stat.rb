@@ -4,10 +4,10 @@ module Hagma
     # @param owner ModuleInfo The ancestor that the method has.
     # @param level Integer
     class MethodStat
-      attr_reader :method_info, :owner, :level
+      attr_reader :method_info, :module_info, :level
       def initialize(method_info, module_info, level)
         @method_info = method_info
-        @owner = module_info
+        @module_info = module_info
         @level = level
       end
 
