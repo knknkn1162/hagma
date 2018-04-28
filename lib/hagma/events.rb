@@ -30,6 +30,13 @@ module Hagma
           owner = owner.singleton_class
         end
       end
+
+      def add_refinement_module(mod)
+        # this variable is like `[#<refinement:Array@ArrayExt>, Array, Object, BasicObject]`
+        class_ancestors = mod.ancestors - mod.included_modules
+        # Ruby does not have `Module#refined`, so we invoke Events::add_module_event directly instead.
+        add_module_event(class_ancestors[0], class_ancestors[1], :refined)
+      end
     end
   end
 end
