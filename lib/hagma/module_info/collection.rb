@@ -38,7 +38,7 @@ module Hagma
         @ancestors[owner] ||= refinement_modules(owner) + res + res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.new(klass, nil, nil) }
       end
 
-      def refinenent_modules(owner)
+      def refinement_modules(owner)
         @module_collection[owner][:leftmost]
       end
 
