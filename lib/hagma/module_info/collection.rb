@@ -34,7 +34,12 @@ module Hagma
       def ancestors(owner)
         @ancestors ||= {}
         res = linked_ancestors(owner).flatten
-        @ancestors[owner] ||= res + res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.new(klass, nil, nil) }
+        # TODO: make sure that lookup logic is correct
+        @ancestors[owner] ||= refinement_modules(owner) + res + res.last.target.ancestors[1..-1].map { |klass| ModuleInfo.new(klass, nil, nil) }
+      end
+
+      def refinenent_modules(owner)
+        @module_collection[owner][:leftmost]
       end
 
       private
