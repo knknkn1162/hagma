@@ -15,13 +15,7 @@ module Hagma
           else
             [owner, hook]
           end
-        MethodInfo.new(method, owner, access_controller(owner, method), hook).push
-      end
-
-      def access_controller(owner, method)
-        %i[public protected private].find do |controller|
-          owner.send("#{controller}_method_defined?", method)
-        end
+        MethodInfo.new(method, owner, hook).push
       end
 
       def add_module_event(mod, owner, hook)
