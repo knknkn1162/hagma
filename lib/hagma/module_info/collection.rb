@@ -23,8 +23,8 @@ module Hagma
         @chain[owner] ||= collection[owner][:backward].reverse + [ModuleInfo.dummy] + collection[owner][:forward].reverse
       end
 
-      def filter_with_target(owner)
-        list.select { |module_info| module_info.target == owner }
+      def filter_with_target(target)
+        list.select { |module_info| module_info.target == target }
       end
 
       def list
