@@ -3,13 +3,6 @@ require 'hagma/events'
 module Hagma
   # Catch method or module added or removed or deleted
   module Hook
-    class << self
-      # Check if `self` owner is refinement module or not
-      # if module is refinement module, its form is `#<refinement:Array@ArrayExt>`
-      def refined?(mod)
-        mod.to_s[2..-1].start_with?('refinement:')
-      end
-    end
     def method_event(hook)
       define_method(hook) do |mth|
         owner = self
