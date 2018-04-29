@@ -1,4 +1,4 @@
-require 'hagma/method_info'
+require 'hagma/method_catcher'
 
 module Hagma
   class ConstInfo
@@ -11,15 +11,13 @@ module Hagma
     end
 
     def collect_methods
-      method_catcher ||=
-        [const, const.singleton_class].each do |cst|
-          %i[public protected private].each do |controller|
-            cst.__send__("#{controller}_instance_methods", false).map do |met|
-              method_catcher.push(met, cst, :core, access_controller: controller, backtrace: false)
-            end
+      [const, const.singleton_class].each do |cst|
+        %i[public protected private].each do |controller|
+          cst.__send__("#{controller}_instance_methods", false).map do |met|
+            MethodCatcher.push(met, cst, :core, access_controller: controller, backtrace: false)
           end
         end
-      method_catcher
+      end
     end
   end
 end
