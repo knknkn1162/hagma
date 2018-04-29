@@ -8,13 +8,6 @@ module Hagma
     class Summary
       class ModuleNotFoundError < StandardError; end
       class << self
-        def merge!(src, dst)
-          dst.keys.each do |method_name|
-            src[method_name] += dst[method_name]
-          end
-          src
-        end
-
         # @return [Integer]
         def offset(klass)
           klass.ancestors.index { |ancestor| ancestor == klass }
