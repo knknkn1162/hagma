@@ -1,21 +1,26 @@
 require 'hagma/module_info'
 
 module Hagma
-  # store information on the designated module
   class ModuleInfo
+    # store information on the designated module
     class Collection
-      # @param collection
-      def initialize(collection)
-        @collection = collection
+      attr_reader :collection
+      def initialize
+        @collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
+      end
+
+      def push(mod, owner, hook)
+        module_info = ModuleInfo.new(mod, owner, hook)
+        collection[module_info.chain_owner][module_info.position] << module_info
       end
 
       def keys
-        @collection.keys
+        collection.keys
       end
 
       def chain(owner)
         @chain ||= {}
-        @chain[owner] ||= @collection[owner][:backward].reverse + [ModuleInfo.dummy] + @collection[owner][:forward].reverse
+        @chain[owner] ||= collection[owner][:backward].reverse + [ModuleInfo.dummy] + collection[owner][:forward].reverse
       end
 
       def filter_with_target(owner)
@@ -23,7 +28,7 @@ module Hagma
       end
 
       def list
-        @list ||= @collection.map { |_, modules| modules.values.flatten }.flatten
+        @list ||= collection.map { |_, modules| modules.values.flatten }.flatten
       end
 
       def linked_ancestors(owner)
@@ -46,7 +51,7 @@ module Hagma
       end
 
       def refinement_modules(owner)
-        @collection[owner][:leftmost]
+        collection[owner][:leftmost]
       end
 
       private
