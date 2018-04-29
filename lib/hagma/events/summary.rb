@@ -18,11 +18,11 @@ module Hagma
         @module_collection.filter_with_target(method_info.owner).find { |module_info| @method_collection.owner_methods(module_info.target).include?(method_info) }
       end
 
-      # @param method_collection [list[MethodInfo]]
-      # @param module_collection [list[ModuleInfo]]
+      # @param method_collection [MethodInfo::Collection]
+      # @param module_collection [ModuleInfo::Collection]
       def initialize(method_collection, module_collection)
-        @method_collection = MethodInfo::Collection.new(method_collection)
-        @module_collection = ModuleInfo::Collection.new(module_collection)
+        @method_collection = method_collection
+        @module_collection = module_collection
       end
 
       # search method_info objects from the class
