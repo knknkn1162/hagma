@@ -16,7 +16,7 @@ module Hagma
     name? :singleton
     name? :instance
 
-    def initialize(mth, owner, hook, access_controller = nil, backtrace = true)
+    def initialize(mth, owner, hook, access_controller, backtrace)
       @name = mth
       @owner = owner
       @hook = hook
