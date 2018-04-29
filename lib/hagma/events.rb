@@ -1,11 +1,19 @@
-require 'hagma/method_catcher'
-require 'hagma/module_catcher'
+require 'hagma/method_info/collection'
+require 'hagma/module_info/collection'
 
 module Hagma
   # Add method or module event and stores
   module Events
     autoload :Summary, 'hagma/events/summary'
     class << self
+      def method_collection
+        @method_collection ||= MethodInfo::Collection.new
+      end
+
+      def module_collection
+        @module_collection ||= ModuleInfo::Collection.new
+      end
+
       # @param method [Symbol]
       # @param owner [Constant] Class or Module to which the method belongs.
       # @param hook [Symbol] The form of /\A(singleton_)?method_(added|removed|undefined)\z/
@@ -17,14 +25,14 @@ module Hagma
           else
             [owner, hook]
           end
-        MethodCatcher.push(method, owner, hook)
+        method_collection.push(method, owner, hook)
       end
 
       # @param mod [Symbol]
       # @param owner [Constant] Class or Module to which the method belongs.
       # @param hook [Symbol] The form of /\A(included|extended|prepended|refined)\?\z/
       def add_module_event(mod, owner, hook)
-        ModuleCatcher.push(mod, owner, hook)
+        module_collection.push(mod, owner, hook)
       end
 
       # @param super_class [Class] super_class
@@ -32,7 +40,7 @@ module Hagma
       # @param hook [Symbol] The form of /\A(inherited)\?\z/
       def add_class_event(super_class, owner, hook)
         3.times do
-          ModuleCatcher.push(mod, owner, hook)
+          module_collection.push(mod, owner, hook)
           # update variable
           super_class = super_class.singleton_class
           owner = owner.singleton_class
