@@ -1,23 +1,23 @@
-require 'hagma/method_catcher'
-require 'hagma/const_catcher'
+require 'hagma/const_info/collection'
+require 'hagma/method_info/collection'
 
 module Hagma
   # add core methods into MethodInfo.collection
   class Initializer
     def initialize
-      @const_catcher = ConstCatcher.new
+      @const_collection = ConstInfo::Collection.new
     end
 
-    def class_modules
-      @const_catcher.enumerate.class_modules
+    def enum
+      @enum ||= @const_collection.enumerate
     end
 
-    def collect_methods
-      res = MethodCatcher.new
-      class_modules.each do |method_catcher|
-        res.merge!(method_catcher)
+    def method_collection
+      collection = MethodInfo::Collection.new
+      enum.class_modules.each do |const_info|
+        collection.merge!(const_info.collect_methods)
       end
-      res
+      collection
     end
   end
 end
