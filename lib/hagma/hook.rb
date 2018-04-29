@@ -1,5 +1,5 @@
 require 'hagma/events'
-require 'hgama/core_ext/module/refine'
+require 'hagma/core_ext/module/refine'
 
 module Hagma
   # Catch method or module added or removed or deleted
