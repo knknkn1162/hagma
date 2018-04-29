@@ -21,7 +21,15 @@ module Hagma
       @owner = owner
       @hook = hook
       @access_controller = access_controller.nil? ? _access_controller : access_controller
-      @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
+      @backtrace_locations =
+        if backtrace
+          if hook == :core
+            location = owner.instance_method(mth).source_location
+            [Location.new(absolute_path: location&.absolute_path, lineno: location&.lineno)]
+          else
+            Backtrace::Location.locations BACKTRACE_METHOD_NUMBER
+          end
+        end
     end
 
     # @note Module#instance_method returns UnboundMethod class
