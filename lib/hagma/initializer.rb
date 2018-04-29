@@ -9,10 +9,10 @@ module Hagma
     end
 
     def class_modules
-      @const_catcher.new.enumerate.class_modules
+      @const_catcher.enumerate.class_modules
     end
 
-    def method_collection
+    def collect_methods
       res = MethodCatcher.new
       class_modules.each do |method_catcher|
         res.merge!(method_catcher)
