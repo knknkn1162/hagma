@@ -1,35 +1,53 @@
-require 'hagma/method_info'
-require 'hagma/module_info'
+require 'hagma/method_catcher'
+require 'hagma/module_catcher'
 
 module Hagma
   # Add method or module event and stores
   module Events
     autoload :Summary, 'hagma/events/summary'
     class << self
+      def method_catcher
+        @method_catcher ||= MethodCatcher.new
+      end
+
+      def module_catcher
+        @module_catcher ||= ModuleCatcher.new
+      end
+
+      # @param method [Symbol]
+      # @param owner [Constant] Class or Module to which the method belongs.
+      # @param hook [Symbol] The form of /\A(singleton_)?method_(added|removed|undefined)\z/
       def add_method_event(method, owner, hook)
         owner, hook =
           if hook.to_s.include?('singleton')
-            # hook is the form of (singleton_)?_method_(added|removed|undefined)
             # the number 10 is the the number of characters, `singleton_`.
             [owner.singleton_class, hook.to_s[10..-1].to_sym]
           else
             [owner, hook]
           end
-        MethodInfo.new(method, owner, hook).push
+        method_catcher.push(method, owner, hook)
       end
 
+      # @param mod [Symbol]
+      # @param owner [Constant] Class or Module to which the method belongs.
+      # @param hook [Symbol] The form of /\A(included|extended|prepended|refined)\?\z/
       def add_module_event(mod, owner, hook)
-        ModuleInfo.new(mod, owner, hook).push
+        module_catcher.push(mod, owner, hook)
       end
 
+      # @param super_class [Class] super_class
+      # @param owner [Class] subclass
+      # @param hook [Symbol] The form of /\A(inherited)\?\z/
       def add_class_event(super_class, owner, hook)
         3.times do
-          ModuleInfo.new(super_class, owner, hook).push
+          module_catcher.push(mod, owner, hook)
+          # update variable
           super_class = super_class.singleton_class
           owner = owner.singleton_class
         end
       end
 
+      # @param mod [Module] refinement module
       def add_refinement_module(mod)
         # this variable is like `[#<refinement:Array@ArrayExt>, Array, Object, BasicObject]`
         class_ancestors = mod.ancestors - mod.included_modules
