@@ -1,4 +1,8 @@
 require 'hagma/hook'
+# store existed method, e.g) Object#taint..
+require 'hagma/init'
+
 # extend to Object & BasicObject class
-require 'hagma/core/init'
-require 'hagma/core/ext'
+require 'hagma/core_ext/module/hook'
+require 'hagma/core_ext/class/hook'
+require 'hagma/core_ext/basic_object/hook'
