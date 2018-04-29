@@ -25,7 +25,9 @@ module Hagma
         if backtrace
           if hook == :core
             location = owner.instance_method(mth).source_location
-            [Location.new(absolute_path: location&.absolute_path, lineno: location&.lineno)]
+            absolute_path = location[0] if location
+            lineno = location[1] if location
+            [Location.new(absolute_path: absolute_path, lineno: lineno)]
           else
             Backtrace::Location.locations BACKTRACE_METHOD_NUMBER
           end
