@@ -22,6 +22,19 @@ module Hagma
         end.flatten
       end
 
+      def status(owner, met)
+        if (method_info = @collection[owner][met].last)
+          case method_info.hook
+          when :method_added, :core then
+            :enable
+          when :method_removed then
+            :skip
+          when :method_undefined then
+            :halt
+          end
+        end
+      end
+
       def owner_methods(owner)
         @collection[owner].values
       end
