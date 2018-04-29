@@ -1,4 +1,5 @@
 require 'hagma/events'
+require 'hgama/core_ext/module/refine'
 
 module Hagma
   # Catch method or module added or removed or deleted
@@ -8,9 +9,7 @@ module Hagma
         owner = self
         Events.add_method_event(mth, owner, hook)
         # Check if `self` owner is refinement module or not
-        if to_s[2..-1].start_with?('refinement:')
-          Events.add_refinement_module(owner) if Hook.refined?(owner)
-        end
+        Events.add_refinement_module(owner) if owner.refine?
       end
     end
 
