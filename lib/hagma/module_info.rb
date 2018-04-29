@@ -2,10 +2,6 @@ module Hagma
   # store information on the designated module
   class ModuleInfo
     class << self
-      def collection
-        @collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
-      end
-
       def root(owner)
         new(owner, nil, nil, false)
       end
@@ -14,6 +10,7 @@ module Hagma
         @dummy ||= new(nil, nil, nil, false)
       end
     end
+
     attr_reader :target, :owner, :hook, :backtrace_locations
     BACKTRACE_METHOD_NUMBER = 5
     def initialize(target, owner, hook, backtrace = true)
@@ -21,10 +18,6 @@ module Hagma
       @owner = owner
       @hook = hook
       @backtrace_locations = Backtrace::Location.locations BACKTRACE_METHOD_NUMBER if backtrace
-    end
-
-    def push
-      self.class.collection[chain_owner][position] << self
     end
 
     def position

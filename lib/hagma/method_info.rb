@@ -12,10 +12,6 @@ module Hagma
           method_type == name
         end
       end
-
-      def collection
-        @collection ||= Hash.new { |h, k| h[k] = [] }
-      end
     end
     name? :singleton
     name? :instance
@@ -40,10 +36,6 @@ module Hagma
       when :singleton_method_added, :singleton_method_removed, :singleton_method_undefined then
         :singleton
       end
-    end
-
-    def push
-      self.class.collection[owner] << self
     end
 
     private
