@@ -3,6 +3,7 @@ require 'hagma/module_info'
 module Hagma
   # Class for collecting method
   class ModuleCatcher
+    attr_reader :collection
     def initialize
       @collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
     end
