@@ -36,7 +36,7 @@ module Hagma
       end
 
       def owner_methods(owner)
-        @collection[owner].values
+        @collection[owner].values.flatten
       end
 
       def merge!(other_collection)
