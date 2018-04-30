@@ -9,8 +9,8 @@ module Hagma
         @collection ||= Hash.new { |h, k| h[k] = { backward: [], forward: [], leftmost: [] } }
       end
 
-      def push(mod, owner, hook)
-        module_info = ModuleInfo.new(mod, owner, hook)
+      def push(mod, owner, hook, backtrace = true)
+        module_info = ModuleInfo.new(mod, owner, hook, backtrace)
         collection[module_info.chain_owner][module_info.position] << module_info
       end
 

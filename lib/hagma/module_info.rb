@@ -13,7 +13,7 @@ module Hagma
 
     attr_reader :target, :owner, :hook, :backtrace_locations
     BACKTRACE_METHOD_NUMBER = 5
-    def initialize(target, owner, hook, backtrace = true)
+    def initialize(target, owner, hook, backtrace)
       @target = target
       @owner = owner
       @hook = hook

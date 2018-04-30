@@ -9,7 +9,7 @@ module Hagma
         @collection = Hash.new { |h1, k1| h1[k1] = Hash.new { |h2, k2| h2[k2] = [] } }
       end
 
-      def push(method, owner, hook, access_controller = nil, backtrace = false)
+      def push(method, owner, hook, access_controller = nil, backtrace = true)
         @collection[owner][method] << MethodInfo.new(method, owner, hook, access_controller, backtrace)
       end
 
