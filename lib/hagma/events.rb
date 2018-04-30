@@ -40,7 +40,7 @@ module Hagma
       # @param hook [Symbol] The form of /\A(inherited)\?\z/
       def add_class_event(super_class, owner, hook)
         3.times do
-          module_collection.push(mod, owner, hook)
+          module_collection.push(super_class, owner, hook)
           # update variable
           super_class = super_class.singleton_class
           owner = owner.singleton_class
